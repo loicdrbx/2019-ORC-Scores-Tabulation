@@ -1,0 +1,14 @@
+{
+  "name": "data-entry-2019",
+  "version": "1.0.0",
+  "description": "The data entry program/app for ORC 2019",
+  "main": "app.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "Loic Darboux",
+  "license": "ISC",
+  "dependencies": {
+    "sqlite3": "^4.0.8"
+  }
+}
