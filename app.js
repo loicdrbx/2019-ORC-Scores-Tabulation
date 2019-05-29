@@ -17,7 +17,7 @@ var DB = new Database(DB_PATH, DB_SCHEMA);
 // Sumo Challenge test functions
 // (Run only one at a time for best results)
 // addSumoEntries();
-// getSumoEntries();
+getSumoEntries();
 // clearSumoEntries();
 
 // Interview test functions

@@ -15,9 +15,10 @@ What things you need to run and install this project :
 ### Installing
 
 Open a terminal or git bash in the directory in which you wish to install the project and type the following commands.
-1. ```git clone https://github.com/Wolf4992/ORC-Data-Entry-2019.git```
-2. ```cd ORC-Data-Entry-2019```
-3. ```npm install```
+1. ```git pull```
+2. ```git clone https://github.com/Wolf4992/ORC-Data-Entry-2019.git```
+3. ```cd ORC-Data-Entry-2019```
+4. ```npm install```
 Open the ORC-Data-Entry-2019 folder in your favourite code editor and you should be ready to go.
 
 [temporary]: run ```node app.js``` to run dummy tests and check that th eapp works.
