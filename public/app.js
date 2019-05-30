@@ -1,7 +1,7 @@
-const Database = require('./db/database');
-const Schema = require('./db/databaseSchema');
+const Database = require('../db/database');
+const Schema = require('../db/databaseSchema');
 
-const DB_PATH = './db/data-ORC2019.db';
+const DB_PATH = '../db/data-ORC2019.db';
 const DB_SCHEMA = Schema.DB_SCHEMA;
 
 var DB = new Database(DB_PATH, DB_SCHEMA);
@@ -9,9 +9,12 @@ var DB = new Database(DB_PATH, DB_SCHEMA);
 /**
  * WARNING - BEWARE
  * Most the database functions run asyschronously. This means that
- * your code will not be executes line by line, but rather race to complete.
+ * your code will not be executed line by line, but rather race to complete.
  * (i.e the tenth line might finish executing before the first line.)
  * Either learn how to use javascript promises or run one command at a time.
+ * 
+ * ALSO - The test functions are just wrappers of the actual DB functions.
+ * Feel free to get rid of them and make direct calls to the db.
  */
 
 // Sumo Challenge test functions

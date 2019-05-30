@@ -21,11 +21,14 @@ Open a terminal or git bash in the directory in which you wish to install the pr
 4. ```npm install```
 Open the ORC-Data-Entry-2019 folder in your favourite code editor and you should be ready to go.
 
-[temporary]: run ```node app.js``` to run dummy tests and check that th eapp works.
+[temporary]: run ```node app.js``` in the ```public``` Sto run dummy tests and check that th eapp works.
 
 ## Deployment
 
-For now, simply:
+To run the app on a locally hosted server, run the following command in the root directory:
+1. ```firebase serve```
+
+To comit changes, navigate to the root directory, simply:
 1. ```git add *```
 2. ```git commit -m "what you changed"```
 3. ```git push origin master```
