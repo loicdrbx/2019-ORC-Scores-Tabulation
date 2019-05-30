@@ -11,16 +11,16 @@ class Database {
     // Establish a connection with the database at DB_PATH
     this.db = new sqlite3.Database(DB_PATH, function(err){
       if (err) {
-        return console.err(err.message);
+        return console.error(err.message);
       }
       console.log('Connected to ' + DB_PATH + ' database.');
     });
-    // Create the database's schema if it doesn't exist
+    // Execute the database's schema or create it if it doesn't exist
     this.db.exec(DB_SCHEMA, function(err){
       if (err) {
         return console.error(err.message);
       }
-      console.log('Database schema has been created (if needed).');
+      console.log('Database schema has been executed.');
     });
   }
 
@@ -79,7 +79,7 @@ class Database {
    */
   getSumoEntries() {
     // SQL query to be executed
-    const SQL = `SELECT * FROM sumo_challenge ORDER BY score DESC, matches DESC;`;
+    const SQL = `SELECT * FROM sumo_challenge ORDER BY score DESC, matches;`;
     // Return the results of the query one row at a time
     this.db.all(SQL, function(err, rows) {
       if (err) {
@@ -124,7 +124,7 @@ class Database {
       console.log('Sumo final results have been computed!');
     });
   }
-  
+
   /**
    * Retrieves all the data in the sumo_results table
    */
@@ -156,9 +156,140 @@ class Database {
   }
 
   /**
+   * Adds an entry to the drag race challenge table
+   * @param {number} teamNum The team's number
+   * @param {string} result  The team's result. Either win, tie or loss.
+   */
+  addDragRaceEntry(teamNum, result) {
+    // SQL statements to insert or update (upsert) results into database
+    const winSQL = `INSERT INTO drag_challenge (teamNum, wins, ties, losses) 
+                      VALUES (${teamNum}, 1, 0, 0)
+                      ON CONFLICT(teamNum) DO 
+                        UPDATE SET wins = wins + 1 WHERE teamNum = ${teamNum};`
+    const tieSQL = `INSERT INTO drag_challenge (teamNum, wins, ties, losses) 
+                      VALUES (${teamNum}, 0, 1, 0)
+                      ON CONFLICT(teamNum) DO 
+                        UPDATE SET ties = ties + 1 WHERE teamNum = ${teamNum};`
+    const lossSQL = `INSERT INTO drag_challenge (teamNum, wins, ties, losses) 
+                      VALUES (${teamNum}, 0, 0, 1)
+                      ON CONFLICT(teamNum) DO 
+                        UPDATE SET losses = losses + 1 WHERE teamNum = ${teamNum};`
+    // Run appropriate SQL command depending on result              
+    switch(result) {
+      case 'win':
+        this.db.run(winSQL, function(err) {
+          if (err) {
+            return console.error(err.message);
+          }
+          console.log('Team ' + teamNum + 's drag race result has been inserted.');
+        });
+        break;
+      case 'tie':
+        this.db.run(tieSQL, function(err) {
+          if (err) {
+            return console.error(err.message);
+          }
+          console.log('Team ' + teamNum + 's drag race result has been inserted.');
+        });
+        break;
+      case 'loss':
+        this.db.run(lossSQL, function(err) {
+          if (err) {
+            return console.error(err.message);
+          }
+          console.log('Team ' + teamNum + 's drag race result has been inserted.');
+        });
+        break;
+      default:
+        return console.error("Invalid result string. Failed to insert data. Try again, dummy.");
+    }
+  }
+
+  /**
+   * Retrieves all the data in the drag race challenge table
+   */
+  getDragRaceEntries() {
+    // SQL query to be executed
+    const SQL = `SELECT * FROM drag_challenge ORDER BY score DESC, matches;`;
+    // Return the results of the query one row at a time
+    this.db.all(SQL, function(err, rows) {
+      if (err) {
+        return console.error(error.message);
+      }
+      // Pretty print the results
+      console.log('Drag Race Challenge Results');
+      console.log('Team # | Matches | Wins | Ties | Losses | Points | Score (out of 70)');
+      rows.forEach(function(row) {
+        console.log(`${row.teamNum} | ${row.matches} | ${row.wins} | ${row.ties} | ${row.losses} | ${row.points} | ${row.score}`);
+      });
+    });
+  }
+
+  /**
+   * Computes final results for the Drag Race Challenge (interview + challenge).
+   * Should only be run when all interviews have been completed. 
+   */
+  computeDragRaceResults() {
+    // SQL to be executed
+    const SQL = `INSERT OR REPLACE INTO drag_results (teamNum, challenge, interview)
+                  SELECT drag_challenge.teamNum, drag_challenge.score, interview_scores.score
+                    FROM drag_challenge, interview_scores
+                    WHERE drag_challenge.teamNum = interview_scores.teamNum;`
+    // Run the SQL
+    this.db.run(SQL, function(err) {
+      if (err) {
+        return console.error(err.message);
+      }
+      console.log('Drag Race final results have been computed!');
+    });
+  }
+  
+  /**
+   * Retrieves all the data in the drag_results table
+   */
+  getDragRaceResults() {
+    // SQL query to be executed
+    const SQL = `SELECT * FROM drag_results ORDER BY totalScore DESC;`;
+    // Retun the results of the query one row at a time
+    this.db.all(SQL, function(err, rows) {
+      if (err) {
+        return console.error(err.message);
+      }
+      // Pretty print the results
+      console.log('Drag Race Final Results');
+      console.log('Team # | Challenge | Interview | Total Score');
+      rows.forEach(function(row) {
+        console.log(`${row.teamNum} | ${row.challenge} | ${row.interview} | ${row.totalScore}`);
+      });
+    });
+  }
+
+  /**
+   * Clears all data in the drag race challenge table
+   */
+  clearDragRaceEntries() {
+    this.db.run(`DELETE FROM drag_challenge;`, function(err) {
+      if (err) {
+        return console.error(err.message);
+      }
+      console.log('drag_challenge table has been cleared.');
+    });
+  }
+
+  /** Clears all data in the drag race results table */
+  clearDragRaceResults() {
+    this.db.run(`DELETE FROM drag_results;`, function(err) {
+      if (err) {
+        return console.error(err.message);
+      }
+      console.log('drag_results table has been cleared.');
+    });   
+  }
+
+  /**
    * Adds an entry to the interview scores table
-   * @param {number} teamNum 
-   * @param {number} score 
+   * @param {number} teamNum The team's number
+   * @param {number} score The team's score (out of 30)
    */
   addInterviewEntry(teamNum, score) {
     // SQL to be executed

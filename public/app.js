@@ -17,10 +17,30 @@ var DB = new Database(DB_PATH, DB_SCHEMA);
  * Feel free to get rid of them and make direct calls to the db.
  */
 
-// Sumo Challenge test functions
+// Database API, for now
+// DB.clearSumoEntries();
+// DB.addSumoEntry(84, 'win');
+// DB.getSumoEntries();
+// DB.computeSumoResults();
+// DB.getSumoResults();
+// DB.clearSumoResults();
+
+// DB.clearDragRaceEntries();
+// DB.addDragRaceEntry(84, 'win');
+// DB.getDragRaceEntries();
+// DB.computeDragRaceResults();
+// DB.getDragRaceResults();
+// DB.clearDragRaceResults();
+
+// DB.addInterviewEntry(89, 15);
+// DB.clearInterviewEntries();
+// DB.getInterviewEntries();
+
+// Challenge test functions
 // (Run only one at a time for best results)
-// addSumoEntries();
-// clearSumoEntries();
+// addChallengeEntries();
+// clearChallengeEntries();
+// getChallengeEntries();
 
 // Interview test functions
 // (run only one at a time for best results)
@@ -28,30 +48,31 @@ var DB = new Database(DB_PATH, DB_SCHEMA);
 // getInterviewEntries();
 // clearInterviewEntries();
 
-// Sumo Results test functions
+// Challenge Results test functions
 // (run one at a time for best results)
-// computeSumoResults();
-// getSumoResults();
-// clearSumoResults();
+// computeChallengeResults();
+// getChallengeResults();
+// clearChallengeResults();
 
-function clearSumoEntries() {
-  DB.clearSumoEntries();
+function clearChallengeEntries() {
+  DB.clearDragRaceEntries();
 }
 
-function addSumoEntries() {
-  DB.addSumoEntry(84, 'win');
-  DB.addSumoEntry(84, 'tie');
-  DB.addSumoEntry(84, 'loss');
-  DB.addSumoEntry(89, 'win');
-  DB.addSumoEntry(89, 'win');
-  DB.addSumoEntry(89, 'tie')
-  DB.addSumoEntry(82, 'win')
-  DB.addSumoEntry(78, 'loss');
-  DB.addSumoEntry(78, 'loss');
+function addChallengeEntries() {
+  DB.addDragRaceEntry(84, 'win');
+  DB.addDragRaceEntry(84, 'tie');
+  DB.addDragRaceEntry(84, 'loss');
+  DB.addDragRaceEntry(89, 'win');
+  DB.addDragRaceEntry(89, 'tie');
+  DB.addDragRaceEntry(89, 'loss');
+  DB.addDragRaceEntry(89, 'loss')
+  DB.addDragRaceEntry(82, 'win')
+  DB.addDragRaceEntry(78, 'tie');
+  DB.addDragRaceEntry(78, 'tie');
 }
 
-function getSumoEntries() {
-  DB.getSumoEntries();
+function getChallengeEntries() {
+  DB.getDragRaceEntries();
 }
 
 function addInterviewEntries() {
@@ -70,15 +91,14 @@ function getInterviewEntries() {
   DB.getInterviewEntries();
 }
 
-function computeSumoResults() {
-  DB.computeSumoResults();
+function computeChallengeResults() {
+  DB.computeDragRaceResults();
 }
 
-function getSumoResults() {
-  DB.getSumoResults();
+function getChallengeResults() {
+  DB.getDragRaceResults();
 }
 
-function clearSumoResults() {
-  DB.clearSumoResults();
+function clearChallengeResults() {
+  DB.clearDragRaceResults();
 }
-
