@@ -1,0 +1,25 @@
+[debug] [2019-05-30T11:57:51.760Z] ----------------------------------------------------------------------
+[debug] [2019-05-30T11:57:51.763Z] Command:       /usr/local/bin/node /usr/local/bin/firebase serve
+[debug] [2019-05-30T11:57:51.763Z] CLI Version:   6.10.0
+[debug] [2019-05-30T11:57:51.763Z] Platform:      linux
+[debug] [2019-05-30T11:57:51.763Z] Node Version:  v10.15.3
+[debug] [2019-05-30T11:57:51.763Z] Time:          Thu May 30 2019 07:57:51 GMT-0400 (Eastern Daylight Time)
+[debug] [2019-05-30T11:57:51.763Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2019-05-30T11:57:51.771Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2019-05-30T11:57:51.771Z] > authorizing via signed-in user
+[debug] [2019-05-30T11:57:51.772Z] [iam] checking project orc-data-entry for permissions ["firebase.projects.get"]
+[debug] [2019-05-30T11:57:51.774Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/orc-data-entry:testIamPermissions  
+
+[debug] [2019-05-30T11:57:52.286Z] <<< HTTP RESPONSE 200
+[debug] [2019-05-30T11:57:52.293Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/orc-data-entry  
+ 
+[debug] [2019-05-30T11:57:52.689Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from '/home/chroot/Documents/ORC/data-entry-2019'...
+[info] 
+[debug] [2019-05-30T11:57:52.698Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/181866095677/clients/_:getWebAppConfig  
+ 
+[debug] [2019-05-30T11:57:53.193Z] <<< HTTP RESPONSE 200
+[info] i  hosting: Serving hosting files from: public
+[info] ✔  hosting: Local server: http://localhost:5000
