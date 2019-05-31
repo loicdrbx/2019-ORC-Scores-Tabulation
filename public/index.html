@@ -1,18 +1,205 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ORC Data Entry</title>
-    <link rel="stylesheet" type="text/css" href="css/styles.css">
-  </head>
-  <body>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="IEEE Ottawa Robotics Competition Tabulation">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IEEE ORC</title>
 
-    <h1>Home Page</h1>
-    <!-- 
-      Components this page needs to have:
+  <!-- Material Design Lite -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.blue-orange.min.css">
+  <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
 
-      Navigation to each challenge's data entry forms.
-    -->
-  </body>
+  <link rel="stylesheet" href="css/styles.css">
+  <style id="dyn-signin"></style>
+</head>
+<body>
+<div class="mdl-layout mdl-js-layout">
+  <!-- Header section containing title -->
+  <header class="mdl-layout__header mdl-layout__header--scroll">
+    <div class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
+      <div class="mdl-layout__header-row mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop">
+        <h3>IEEE ORC Tabulation</h3>
+        <!-- Add spacer, to align navigation to the right -->
+        <div class="mdl-layout-spacer"></div>
+        <!-- Navigation -->
+        <nav class="mdl-navigation">
+          <a class="mdl-navigation__link" href="#davinci">Da Vinci</a>
+          <a class="mdl-navigation__link" href="#dragrace">Drag Race</a>
+          <a class="mdl-navigation__link" href="#greenarm">Green Arm</a>
+          <a class="mdl-navigation__link" href="#lrt">LRT</a>
+          <a class="mdl-navigation__link" href="#sumo">Sumo</a>
+          <a class="mdl-navigation__link" href="#interview">Interview</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="mdl-layout__content mdl-color--grey-100">
+    <div class="mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
+      <!-- Card containing the sign-in UI -->
+      <div class="mdl-card mdl-shadow--2dp mdl-cell cards-signed-out">
+        <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+          <p>
+            This page is for authorized users to record IEEE ORC tabulations.
+          </p>
+          <button id="btn-sign-in" class="mdl-color-text--grey-700 mdl-button--raised mdl-button mdl-js-button mdl-js-ripple-effect"><i class="material-icons">account_circle</i> Sign in with Google</button>
+        </div>
+      </div>
+
+      <!-- Cards containing the signed-in UI -->
+      <div class="mdl-card mdl-shadow--2dp mdl-cell cards-signed-in">
+        <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+          <p>
+            Hello, <span id="user-name" style="font-weight: bold;">Unknown User</span>!
+          </p>
+          <br />
+          <button id="btn-sign-out" class="mdl-color-text--grey-700 mdl-button--raised mdl-button mdl-js-button mdl-js-ripple-effect">Sign out</button>
+        </div>
+      </div>
+
+      <!-- Cards containing the signed-in UI -->
+      <div class="mdl-card mdl-shadow--2dp mdl-cell cards-signed-in" id="sumo">
+  <div class="mdl-card__title mdl-card--expand">
+    <h2 class="mdl-card__title-text">Sumo (Lego)</h2>
+  </div>
+        <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+          <table class="mdl-data-table mdl-js-data-table result-table">
+            <thead>
+              <tr>
+                <th>Team</th>
+                <th class="mdl-data-table__cell--non-numeric">Team Number</th>
+                <th class="mdl-data-table__cell--non-numeric">Score</th>
+                <th class="mdl-data-table__cell--non-numeric">Won?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  1
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="sumo-team1id" v-model="one.id">
+                    <label class="mdl-textfield__label" for="sumo-team1id">Number</label>
+                    <span class="mdl-textfield__error">Input is not a number!</span>
+                  </div>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="sumo-team1score" v-model="one.score">
+                    <label class="mdl-textfield__label" for="sumo-team1score">Score</label>
+                    <span class="mdl-textfield__error">Input is not a number!</span>
+                  </div>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <span v-if="one.score > two.score">Win</span>
+                  <span v-if="one.score == two.score">Tie</span>
+                  <span v-if="one.score < two.score">Loss</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  2
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="sumo-team2id" v-model="two.id">
+                    <label class="mdl-textfield__label" for="sumo-team2id">Number</label>
+                    <span class="mdl-textfield__error">Input is not a number!</span>
+                  </div>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="sumo-team2score" v-model="two.score">
+                    <label class="mdl-textfield__label" for="sumo-team2score">Score</label>
+                    <span class="mdl-textfield__error">Input is not a number!</span>
+                  </div>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <span v-if="two.score > one.score">Win</span>
+                  <span v-if="two.score == one.score">Tie</span>
+                  <span v-if="two.score < one.score">Loss</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="mdl-card__actions mdl-card--border">
+          <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" v-on:click="submitData()" :disabled="mutex">
+            Submit Results
+          </a>
+        </div>
+      </div>
+
+      <!-- Cards containing the signed-in UI -->
+      <div class="mdl-card mdl-shadow--2dp mdl-cell cards-signed-in" id="dragrace">
+        <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+          <h4>Drag Race (Lego)</h4>
+          <br />
+        </div>
+      </div>
+
+      <!-- Cards containing the signed-in UI -->
+      <div class="mdl-card mdl-shadow--2dp mdl-cell cards-signed-in" id="davinci">
+        <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+          <h4>Da Vinci (Lego)</h4>
+          <br />
+        </div>
+      </div>
+
+      <!-- Cards containing the signed-in UI -->
+      <div class="mdl-card mdl-shadow--2dp mdl-cell cards-signed-in" id="greenarm">
+        <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+          <h4>Green Arm (Arduino)</h4>
+          <br />
+        </div>
+      </div>
+
+      <!-- Cards containing the signed-in UI -->
+      <div class="mdl-card mdl-shadow--2dp mdl-cell cards-signed-in" id="lrt">
+        <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+          <h4>LRT (Arduino)</h4>
+          <br />
+        </div>
+      </div>
+
+      <!-- Cards containing the signed-in UI -->
+      <div class="mdl-card mdl-shadow--2dp mdl-cell cards-signed-in" id="interview">
+        <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+          <h4>Interview</h4>
+          <br />
+        </div>
+      </div>
+
+      <!-- Cards containing the signed-in UI -->
+      <div class="mdl-card mdl-shadow--2dp mdl-cell cards-signed-in" id="finalresults">
+        <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+          <h4>Final results</h4>
+          <br />
+        </div>
+      </div>
+
+    </div>
+    <div id="snackbar" class="mdl-js-snackbar mdl-snackbar">
+      <div class="mdl-snackbar__text"></div>
+      <button class="mdl-snackbar__action" type="button"></button>
+    </div>
+  </main>
+</div>
+
+<!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-app.js"></script>
+
+<!-- Add Firebase products that you want to use -->
+<script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-firestore.js"></script>
+
+<!-- Vue -->
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<!-- prod <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
+<script src="js/scripts.js"></script>
+</body>
 </html>
