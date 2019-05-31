@@ -136,7 +136,7 @@ function IEEEORC() {
 
           // First the checks for time
           if (this.one.time > 0) {
-            if (this.one.time <= this.two.time) {
+            if (this.one.time <= this.two.time || this.two.time == 0) {
               // Team 1 beat Team 2 or tie
               this.onePts += 4;
             } else {
@@ -146,7 +146,7 @@ function IEEEORC() {
           }
 
           if (this.two.time > 0) {
-            if (this.two.time <= this.one.time) {
+            if (this.two.time <= this.one.time || this.one.time == 0) {
               // Team 2 beat Team 1 or tie
               this.twoPts += 4;
             } else {
