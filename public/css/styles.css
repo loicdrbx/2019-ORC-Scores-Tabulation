@@ -51,6 +51,9 @@ h3 {
 #dragrace .mdl-textfield {
   width: 50px;
 }
+#davinci .mdl-textfield {
+  width: 100px;
+}
 .mdl-checkbox__box-outline, .mdl-checkbox__focus-helper {
   left: inherit;
 }

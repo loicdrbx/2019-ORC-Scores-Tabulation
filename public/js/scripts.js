@@ -220,6 +220,87 @@ function IEEEORC() {
       }
     });
 
+    // Da vinci
+    this.davinciApp = new Vue({
+      el: '#davinci',
+      data: {
+        one: {
+          id: 0,
+          clt: 0,
+          co: 0,
+          vir: 0,
+          qp: 0,
+          dd: 0,
+        },
+        onePts: 0,
+        two: {
+          id: 0,
+          clt: 0,
+          co: 0,
+          vir: 0,
+          qp: 0,
+          dd: 0,
+        },
+        twoPts: 0,
+        mutex: false
+      },
+      methods: {
+        calculatePoints: function() {
+          // Reset points
+          this.onePts = 0;
+          this.twoPts = 0;
+
+          // sum up points
+          this.onePts = this.one.clt + this.one.co + this.one.vir + this.one.qp + this.one.dd;
+          this.twoPts = this.two.clt + this.two.co + this.two.vir + this.two.qp + this.two.dd;
+        },
+        // This method submits the data to the remote database server
+        submitData: function() {
+          if (this.mutex) return;
+          this.mutex = true;
+
+          // Validate the data
+          if (this.one.id == this.two.id) {
+            // Invalid team ID
+            document.getElementById('snackbar').MaterialSnackbar.showSnackbar({message: 'Team ID\'s cannot be the same!'});
+            this.mutex = false;
+            return;
+          }
+          this.calculatePoints();
+
+          orc.sendAuthenticatedRequest('POST', 'https://TODO', 'data', (res, err) => {
+            var data;
+            if (err) {
+              data = {message: 'Error recording: ' + (res ? JSON.parse(res).message : err)};
+            } else {
+              data = JSON.parse(res);
+              if (data.message.indexOf('success') >= 0) {
+                Object.keys(this.students).forEach(key => {
+                });
+              }
+            }
+            document.getElementById('snackbar').MaterialSnackbar.showSnackbar(data);
+            this.mutex = false;
+          }, this);
+        }
+      },
+      watch: {
+        // Watch whenenver the checkboxes change and recalculate the points
+        one: {
+          handler: function(v, ov) {
+            this.calculatePoints();
+          },
+          deep: true
+        },
+        two: {
+          handler: function(v, ov) {
+            this.calculatePoints();
+          },
+          deep: true
+        }
+      }
+    });
+
   }.bind(this));
 }
 
