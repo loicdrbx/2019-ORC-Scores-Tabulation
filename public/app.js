@@ -32,6 +32,13 @@ var DB = new Database(DB_PATH, DB_SCHEMA);
 // DB.getDragRaceResults();
 // DB.clearDragRaceResults();
 
+// DB.clearDaVinciEntries();
+// DB.addDaVinciEntry(84, 9);
+// DB.getDaVinciEntries();
+// DB.computeDaVinciResults();
+// DB.getDaVinciResults();
+// DB.clearDaVinciEntries();
+
 // DB.addInterviewEntry(89, 15);
 // DB.clearInterviewEntries();
 // DB.getInterviewEntries();
@@ -44,41 +51,44 @@ var DB = new Database(DB_PATH, DB_SCHEMA);
 
 // Interview test functions
 // (run only one at a time for best results)
-// addInterviewEntries();
+//  addInterviewEntries();
 // getInterviewEntries();
 // clearInterviewEntries();
 
 // Challenge Results test functions
 // (run one at a time for best results)
 // computeChallengeResults();
-// getChallengeResults();
+  getChallengeResults();
 // clearChallengeResults();
 
 function clearChallengeEntries() {
-  DB.clearDragRaceEntries();
+  DB.clearDaVinciEntries();
 }
 
 function addChallengeEntries() {
-  DB.addDragRaceEntry(84, 'win');
-  DB.addDragRaceEntry(84, 'tie');
-  DB.addDragRaceEntry(84, 'loss');
-  DB.addDragRaceEntry(89, 'win');
-  DB.addDragRaceEntry(89, 'tie');
-  DB.addDragRaceEntry(89, 'loss');
-  DB.addDragRaceEntry(89, 'loss')
-  DB.addDragRaceEntry(82, 'win')
-  DB.addDragRaceEntry(78, 'tie');
-  DB.addDragRaceEntry(78, 'tie');
+  // DB.addDaVinciEntry(84, 5.0);
+  // DB.addDaVinciEntry(84, 5.0);
+  // DB.addDaVinciEntry(84, 5.0);
+  DB.addDaVinciEntry(84, 5.0);
+  DB.addDaVinciEntry(89, 7.0);
+  DB.addDaVinciEntry(89, 7.0);
+  DB.addDaVinciEntry(89, 7.0);
+  // DB.addDaVinciEntry(89, 7.0);
+  // DB.addDaVinciEntry(73, 2);
+  // DB.addDaVinciEntry(73, 2);
+  // DB.addDaVinciEntry(73, 2);
+  // DB.addDaVinciEntry(73, 2);
 }
 
+
 function getChallengeEntries() {
-  DB.getDragRaceEntries();
+  DB.getDaVinciEntries();
 }
 
 function addInterviewEntries() {
   DB.addInterviewEntry(89, 15);
   DB.addInterviewEntry(84, 25);
-  DB.addInterviewEntry(82, 20);
+  DB.addInterviewEntry(73, 20);
   DB.addInterviewEntry(78, 18);
   DB.addInterviewEntry(89, 30); 
 }
@@ -92,13 +102,13 @@ function getInterviewEntries() {
 }
 
 function computeChallengeResults() {
-  DB.computeDragRaceResults();
+  DB.computeDaVinciResults();
 }
 
 function getChallengeResults() {
-  DB.getDragRaceResults();
+  DB.getDaVinciResults();
 }
 
 function clearChallengeResults() {
-  DB.clearDragRaceResults();
+  DB.clearDaVinciEntries();
 }
