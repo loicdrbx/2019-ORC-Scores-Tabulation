@@ -39,6 +39,13 @@ var DB = new Database(DB_PATH, DB_SCHEMA);
 // DB.getDaVinciResults();
 // DB.clearDaVinciEntries();
 
+// DB.clearLRTEntries();
+// DB.addLRTEntry(84, 9);
+// DB.getLRTEntries();
+// DB.computeLRTResults();
+// DB.getLRTResults();
+// DB.clearLRTResults();
+
 // DB.addInterviewEntry(89, 15);
 // DB.clearInterviewEntries();
 // DB.getInterviewEntries();
@@ -55,60 +62,3 @@ var DB = new Database(DB_PATH, DB_SCHEMA);
 // getInterviewEntries();
 // clearInterviewEntries();
 
-// Challenge Results test functions
-// (run one at a time for best results)
-// computeChallengeResults();
-  getChallengeResults();
-// clearChallengeResults();
-
-function clearChallengeEntries() {
-  DB.clearDaVinciEntries();
-}
-
-function addChallengeEntries() {
-  // DB.addDaVinciEntry(84, 5.0);
-  // DB.addDaVinciEntry(84, 5.0);
-  // DB.addDaVinciEntry(84, 5.0);
-  DB.addDaVinciEntry(84, 5.0);
-  DB.addDaVinciEntry(89, 7.0);
-  DB.addDaVinciEntry(89, 7.0);
-  DB.addDaVinciEntry(89, 7.0);
-  // DB.addDaVinciEntry(89, 7.0);
-  // DB.addDaVinciEntry(73, 2);
-  // DB.addDaVinciEntry(73, 2);
-  // DB.addDaVinciEntry(73, 2);
-  // DB.addDaVinciEntry(73, 2);
-}
-
-
-function getChallengeEntries() {
-  DB.getDaVinciEntries();
-}
-
-function addInterviewEntries() {
-  DB.addInterviewEntry(89, 15);
-  DB.addInterviewEntry(84, 25);
-  DB.addInterviewEntry(73, 20);
-  DB.addInterviewEntry(78, 18);
-  DB.addInterviewEntry(89, 30); 
-}
-
-function clearInterviewEntries() {
-  DB.clearInterviewEntries();
-}
-
-function getInterviewEntries() {
-  DB.getInterviewEntries();
-}
-
-function computeChallengeResults() {
-  DB.computeDaVinciResults();
-}
-
-function getChallengeResults() {
-  DB.getDaVinciResults();
-}
-
-function clearChallengeResults() {
-  DB.clearDaVinciEntries();
-}

@@ -31,19 +31,19 @@ class Database {
    */
   addSumoEntry(teamNum, result) {
     // SQL statements to insert or update (upsert) results into database
-    const winSQL = `INSERT INTO sumo_challenge (teamNum, wins, ties, losses) 
+    const winSQL = `INSERT INTO sumo_challenge (teamNum, wins, ties, losses)
                       VALUES (${teamNum}, 1, 0, 0)
-                      ON CONFLICT(teamNum) DO 
+                      ON CONFLICT(teamNum) DO
                         UPDATE SET wins = wins + 1 WHERE teamNum = ${teamNum};`
-    const tieSQL = `INSERT INTO sumo_challenge (teamNum, wins, ties, losses) 
+    const tieSQL = `INSERT INTO sumo_challenge (teamNum, wins, ties, losses)
                       VALUES (${teamNum}, 0, 1, 0)
-                      ON CONFLICT(teamNum) DO 
+                      ON CONFLICT(teamNum) DO
                         UPDATE SET ties = ties + 1 WHERE teamNum = ${teamNum};`
-    const lossSQL = `INSERT INTO sumo_challenge (teamNum, wins, ties, losses) 
+    const lossSQL = `INSERT INTO sumo_challenge (teamNum, wins, ties, losses)
                       VALUES (${teamNum}, 0, 0, 1)
-                      ON CONFLICT(teamNum) DO 
+                      ON CONFLICT(teamNum) DO
                         UPDATE SET losses = losses + 1 WHERE teamNum = ${teamNum};`
-    // Run appropriate SQL command depending on result              
+    // Run appropriate SQL command depending on result
     switch(result) {
       case 'win':
         this.db.run(winSQL, function(err) {
@@ -108,7 +108,7 @@ class Database {
 
   /**
    * Computes final results for the Sumo Challenge (interview + challenge).
-   * Should only be run when all interviews have been completed. 
+   * Should only be run when all interviews have been completed.
    */
   computeSumoResults() {
     // SQL to be executed
@@ -152,7 +152,7 @@ class Database {
         return console.error(err.message);
       }
       console.log('sumo_results table has been cleared.');
-    });   
+    });
   }
 
   /**
@@ -162,19 +162,19 @@ class Database {
    */
   addDragRaceEntry(teamNum, result) {
     // SQL statements to insert or update (upsert) results into database
-    const winSQL = `INSERT INTO drag_challenge (teamNum, wins, ties, losses) 
+    const winSQL = `INSERT INTO drag_challenge (teamNum, wins, ties, losses)
                       VALUES (${teamNum}, 1, 0, 0)
-                      ON CONFLICT(teamNum) DO 
+                      ON CONFLICT(teamNum) DO
                         UPDATE SET wins = wins + 1 WHERE teamNum = ${teamNum};`
-    const tieSQL = `INSERT INTO drag_challenge (teamNum, wins, ties, losses) 
+    const tieSQL = `INSERT INTO drag_challenge (teamNum, wins, ties, losses)
                       VALUES (${teamNum}, 0, 1, 0)
-                      ON CONFLICT(teamNum) DO 
+                      ON CONFLICT(teamNum) DO
                         UPDATE SET ties = ties + 1 WHERE teamNum = ${teamNum};`
-    const lossSQL = `INSERT INTO drag_challenge (teamNum, wins, ties, losses) 
+    const lossSQL = `INSERT INTO drag_challenge (teamNum, wins, ties, losses)
                       VALUES (${teamNum}, 0, 0, 1)
-                      ON CONFLICT(teamNum) DO 
+                      ON CONFLICT(teamNum) DO
                         UPDATE SET losses = losses + 1 WHERE teamNum = ${teamNum};`
-    // Run appropriate SQL command depending on result              
+    // Run appropriate SQL command depending on result
     switch(result) {
       case 'win':
         this.db.run(winSQL, function(err) {
@@ -227,7 +227,7 @@ class Database {
 
   /**
    * Computes final results for the Drag Race Challenge (interview + challenge).
-   * Should only be run when all interviews have been completed. 
+   * Should only be run when all interviews have been completed.
    */
   computeDragRaceResults() {
     // SQL to be executed
@@ -283,7 +283,108 @@ class Database {
         return console.error(err.message);
       }
       console.log('drag_results table has been cleared.');
-    });   
+    });
+  }
+
+  /**
+   * Adds an entry to da vinci challenge table
+   * @param {number} teamNum The team's number
+   * @param {number} points The team's points (out of 10)
+   */
+  addDaVinciEntry(teamNum, points) {
+    // SQL to be executed
+    const SQL = `INSERT INTO daVinci_challenge (teamNum, totalPoints)
+                  VALUES (${teamNum}, ${points})
+                    ON CONFLICT(teamNum) DO
+                    UPDATE SET totalPoints = totalPoints + ${points} WHERE teamNum = ${teamNum};`;
+    // Run the SQL
+    this.db.run(SQL, function(err) {
+      if (err) {
+        return console.error(err.message);
+      }
+      console.log('Team ' + teamNum + 's da Vinci score has been inserted.');
+    });
+  }
+
+  /**
+   * Retrieves all the data in the da vinci race challenge table
+   */
+  getDaVinciEntries() {
+    // SQL query to be executed
+    const SQL = `SELECT * FROM daVinci_challenge ORDER BY score DESC;`;
+    // Return the results of the query one row at a time
+    this.db.all(SQL, function(err, rows) {
+      if (err) {
+        return console.error(error.message);
+      }
+      // Pretty print the results
+      console.log('Da Vinci Challenge Results');
+      console.log('Team # | Total Points | Avg. Points | Score (out of 70)');
+      rows.forEach(function(row) {
+        console.log(`${row.teamNum} | ${row.totalPoints} | ${row.avgPoints} | ${row.score}`);
+      });
+    });
+  }
+
+  /**
+   * Clears all data in the da vinci challenge table
+   */
+  clearDaVinciEntries() {
+    this.db.run(`DELETE FROM daVinci_challenge;`, function(err) {
+      if (err) {
+        return console.error(err.message);
+      }
+      console.log('daVinci_challenge table has been cleared.');
+    });
+  }
+
+  /**
+   * Computes final results for the Da Vinci Challenge (interview + challenge).
+   * Should only be run when all interviews have been completed.
+   */
+  computeDaVinciResults() {
+    // SQL to be executed
+    const SQL = `INSERT OR REPLACE INTO daVinci_results (teamNum, challenge, interview)
+                  SELECT daVinci_challenge.teamNum, daVinci_challenge.score, interview_scores.score
+                    FROM daVinci_challenge, interview_scores
+                    WHERE daVinci_challenge.teamNum = interview_scores.teamNum;`;
+    // Run the SQL
+    this.db.run(SQL, function(err) {
+      if (err) {
+        return console.error(err.message);
+      }
+      console.log('Da Vinci final results have been computed!');
+    });
+  }
+  
+  /**
+   * Retrieves all the data in the daVinci_results table
+   */
+  getDaVinciResults() {
+    // SQL query to be executed
+    const SQL = `SELECT * FROM daVinci_results ORDER BY totalScore DESC;`;
+    // Retun the results of the query one row at a time
+    this.db.all(SQL, function(err, rows) {
+      if (err) {
+        return console.error(err.message);
+      }
+      // Pretty print the results
+      console.log('Da Vinci Final Results');
+      console.log('Team # | Challenge | Interview | Total Score');
+      rows.forEach(function(row) {
+        console.log(`${row.teamNum} | ${row.challenge} | ${row.interview} | ${row.totalScore}`);
+      });
+    });
+  }
+
+  /** Clears all data in the drag race results table */
+  clearDaVinciResults() {
+    this.db.run(`DELETE FROM daVinci_results;`, function(err) {
+      if (err) {
+        return console.error(err.message);
+      }
+      console.log('daVinci_results table has been cleared.');
+    });
   }
 
   /**
@@ -304,6 +405,58 @@ class Database {
   }
 
   /**
+   * Adds an entry to the lrt challenge table
+   * @param {number} teamNum The team's number
+   * @param {number} time The team's time (max 120 seconds)
+   */
+  addLRTEntry(teamNum, time) {
+    // SQL to be executed
+    const SQL = `INSERT INTO lrt_challenge (teamNum, totalTime)
+                  VALUES (${teamNum}, ${time})
+                  ON CONFLICT(teamNum) DO
+                    UPDATE SET totalTime = totalTime + ${time} WHERE teamNum = ${teamNum};`;
+    // Run the SQL
+    this.db.run(SQL, function(err) {
+      if (err) {
+        return console.error(err.message);
+      }
+      console.log('Team ' + teamNum + 's LRT score has been inserted.');
+    });
+  }
+
+  /**
+   * Retrieves all the data in the lrt challenge table
+   */
+  getLRTEntries() {
+    // SQL query to be executed
+    const SQL = `SELECT * FROM lrt_challenge ORDER BY mazes DESC, score DESC;`;
+    // Return the results of the query one row at a time
+    this.db.all(SQL, function(err, rows) {
+      if (err) {
+        return console.error(error.message);
+      }
+      // Pretty print the results
+      console.log('LRT Challenge Results');
+      console.log('Team # | # Mazes | Total Time | Avg. Time | Score (out of 70)');
+      rows.forEach(function(row) {
+        console.log(`${row.teamNum} | ${row.mazes} | ${row.totalTime} | ${row.avgTime} | ${row.score}`);
+      });
+    });
+  }
+
+  /**
+   * Clears all data in the lrt challenge table
+   */
+  clearLRTEntries() {
+    this.db.run(`DELETE FROM lrt_challenge;`, function(err) {
+      if (err) {
+        return console.error(err.message);
+      }
+      console.log('lrt_challenge table has been cleared.');
+    });
+  }
+
+  /**
    * Retrieves all the data in the inverview scores table
    */
   getInterviewEntries() {
@@ -320,10 +473,59 @@ class Database {
       rows.forEach(function(row) {
         console.log(`${row.teamNum} | ${row.score}`);
       });
-    });    
+    });
   }
 
- /**
+  /**
+   * Computes final results for the LRT Challenge (interview + challenge).
+   * Should only be run when all interviews have been completed.
+   */
+  computeLRTResults() {
+    // SQL to be executed
+    const SQL = `INSERT OR REPLACE INTO lrt_results (teamNum, challenge, interview)
+                  SELECT lrt_challenge.teamNum, lrt_challenge.score, interview_scores.score
+                    FROM lrt_challenge, interview_scores
+                    WHERE lrt_challenge.teamNum = interview_scores.teamNum;`;
+    // Run the SQL
+    this.db.run(SQL, function(err) {
+      if (err) {
+        return console.error(err.message);
+      }
+      console.log('LRT final results have been computed!');
+    });
+  }
+  
+  /**
+   * Retrieves all the data in the lrt_results table
+   */
+  getLRTResults() {
+    // SQL query to be executed
+    const SQL = `SELECT * FROM lrt_results ORDER BY totalScore DESC;`;
+    // Retun the results of the query one row at a time
+    this.db.all(SQL, function(err, rows) {
+      if (err) {
+        return console.error(err.message);
+      }
+      // Pretty print the results
+      console.log('LRT Final Results');
+      console.log('Team # | Challenge | Interview | Total Score');
+      rows.forEach(function(row) {
+        console.log(`${row.teamNum} | ${row.challenge} | ${row.interview} | ${row.totalScore}`);
+      });
+    });
+  }
+
+  /** Clears all data in the LRT results table */
+  clearLRTResults() {
+    this.db.run(`DELETE FROM lrt_results;`, function(err) {
+      if (err) {
+        return console.error(err.message);
+      }
+      console.log('lrt_results table has been cleared.');
+    });
+  }
+
+  /**
    * Clears all data from the interview scores table
    */
   clearInterviewEntries() {
@@ -338,7 +540,7 @@ class Database {
   /**
    * Closes the connection to the database
    * (Never needs to be called, for now)
-   */ 
+   */
   close() {
     this.db.close(function(err) {
       if (err) {
