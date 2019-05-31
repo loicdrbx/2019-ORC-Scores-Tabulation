@@ -100,6 +100,126 @@ function IEEEORC() {
       }
     });
 
+    // Drag race
+    this.dragApp = new Vue({
+      el: '#dragrace',
+      data: {
+        one: {
+          id: 0,
+          time: 0,
+          stop: false,
+          ltrack: false,
+          llane: false,
+          fstart: false,
+          mstart: false,
+          interference: false
+        },
+        onePts: 0,
+        two: {
+          id: 0,
+          time: 0,
+          stop: false,
+          ltrack: false,
+          llane: false,
+          fstart: false,
+          mstart: false,
+          interference: false
+        },
+        twoPts: 0,
+        mutex: false
+      },
+      methods: {
+        calculatePoints: function() {
+          // Reset points
+          this.onePts = 0;
+          this.twoPts = 0;
+
+          // First the checks for time
+          if (this.one.time > 0) {
+            if (this.one.time <= this.two.time) {
+              // Team 1 beat Team 2 or tie
+              this.onePts += 4;
+            } else {
+              // Second place
+              this.onePts += 3;
+            }
+          }
+
+          if (this.two.time > 0) {
+            if (this.two.time <= this.one.time) {
+              // Team 2 beat Team 1 or tie
+              this.twoPts += 4;
+            } else {
+              // Second place
+              this.twoPts += 3;
+            }
+          }
+
+          // Penalty/bonus calculations for team 1
+          if (this.one.stop)   this.onePts += 2;
+          if (this.one.ltrack) this.onePts -= 1;
+          if (this.one.llane)  this.onePts -= 1;
+          if (this.one.fstart) this.onePts -= 1;
+          if (this.one.mstart) this.onePts -= 1;
+          if (this.one.interference) this.onePts -= 3;
+          if (this.two.interference) this.onePts += 3;
+
+          // Penalty/bonus calculations for team 2
+          if (this.two.stop)   this.twoPts += 2;
+          if (this.two.ltrack) this.twoPts -= 1;
+          if (this.two.llane)  this.twoPts -= 1;
+          if (this.two.fstart) this.twoPts -= 1;
+          if (this.two.mstart) this.twoPts -= 1;
+          if (this.two.interference) this.twoPts -= 3;
+          if (this.one.interference) this.twoPts += 3;
+        },
+        // This method submits the data to the remote database server
+        submitData: function() {
+          if (this.mutex) return;
+          this.mutex = true;
+
+          // Validate the data
+          if (this.one.id == this.two.id) {
+            // Invalid team ID
+            document.getElementById('snackbar').MaterialSnackbar.showSnackbar({message: 'Team ID\'s cannot be the same!'});
+            this.mutex = false;
+            return;
+          }
+          this.calculatePoints();
+
+          orc.sendAuthenticatedRequest('POST', 'https://TODO', 'data', (res, err) => {
+            var data;
+            if (err) {
+              data = {message: 'Error recording: ' + (res ? JSON.parse(res).message : err)};
+            } else {
+              data = JSON.parse(res);
+              if (data.message.indexOf('success') >= 0) {
+                Object.keys(this.students).forEach(key => {
+                });
+              }
+            }
+            document.getElementById('snackbar').MaterialSnackbar.showSnackbar(data);
+            this.mutex = false;
+          }, this);
+        }
+      },
+      watch: {
+        // Watch whenenver the checkboxes change and recalculate the points
+        one: {
+          handler: function(v, ov) {
+            this.calculatePoints();
+          },
+          deep: true
+        },
+        two: {
+          handler: function(v, ov) {
+            this.calculatePoints();
+          },
+          deep: true
+        }
+      }
+    });
+
   }.bind(this));
 }
 

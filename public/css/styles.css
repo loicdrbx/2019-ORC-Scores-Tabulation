@@ -48,3 +48,9 @@ h3 {
   background: rgb(255,152,0);
   background: rgb(33,150,243);
 }
+#dragrace .mdl-textfield {
+  width: 50px;
+}
+.mdl-checkbox__box-outline, .mdl-checkbox__focus-helper {
+  left: inherit;
+}
