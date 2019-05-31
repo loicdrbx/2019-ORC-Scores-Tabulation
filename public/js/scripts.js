@@ -23,12 +23,12 @@ function IEEEORC() {
     this.userIsAdmin = false;
 
     // Initialize the Firebase app.
-    firebase.initializeApp(firebaseConfig);
+    //firebase.initializeApp(firebaseConfig);
 
     // Bind events.
     this.signInButton.addEventListener('click', this.signIn.bind(this));
     this.signOutButton.addEventListener('click', this.signOut.bind(this));
-    firebase.auth().onAuthStateChanged(this.onAuthStateChanged.bind(this));
+    //firebase.auth().onAuthStateChanged(this.onAuthStateChanged.bind(this));
     this.signedInUser = null;
 
     // Setup Vue apps for each competition
@@ -116,12 +116,12 @@ IEEEORC.prototype.onAuthStateChanged = function(user) {
 
 // Initiates the sign-in flow using GoogleAuthProvider sign in in a popup.
 IEEEORC.prototype.signIn = function() {
-  firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider());
+  //firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider());
 };
 
 // Signs-out of Firebase.
 IEEEORC.prototype.signOut = function() {
-  firebase.auth().signOut();
+  //firebase.auth().signOut();
 };
 
 // Does an authenticated request to a Firebase Functions endpoint using an Authorization header.
@@ -138,7 +138,7 @@ IEEEORC.prototype.sendAuthenticatedRequest = function(method, url, body, callbac
   }
 
   // Authenticate the user before sending anything
-  firebase.auth().currentUser.getIdToken().then(function(token) {
+  /*firebase.auth().currentUser.getIdToken().then(function(token) {
     var req = new XMLHttpRequest();
     req.onload = function() {
       if (callback) callback(req.responseText);
@@ -149,7 +149,7 @@ IEEEORC.prototype.sendAuthenticatedRequest = function(method, url, body, callbac
     req.open(method, url, true);
     req.setRequestHeader('Authorization', 'Bearer ' + token);
     req.send();
-  }.bind(this));
+  }.bind(this));*/
 };
 
 // Load the demo.
