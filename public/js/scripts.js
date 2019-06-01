@@ -404,16 +404,19 @@ IEEEORC.prototype.signOut = function() {
 };
 
 // Tells the database to calculate the final results
+var recalculateMutex;
 IEEEORC.prototype.recalculateScores = function() {
-  this.recalculateButton.disabled = true;
+  if (recalculateMutex) return;
+  this.recalculateButton.disabled = recalculateMutex = true;
+  console.log(this.recalculateButton);
   this.sendAuthenticatedRequest('GET', API_BACKEND + '/calculate',  (res, err) => {
     var data;
     if (err) {
-      data = {message: 'Error recording: ' + (res ? JSON.parse(res).message : err)};
+      data = {message: 'Error calculating results: ' + (res ? JSON.parse(res).message : err)};
     } else {
       data = JSON.parse(res);
     }
-    this.recalculateButton.disabled = false;
+    this.recalculateButton.disabled = recalculateMutex = false;
     document.getElementById('snackbar').MaterialSnackbar.showSnackbar(data);
   });
 };
