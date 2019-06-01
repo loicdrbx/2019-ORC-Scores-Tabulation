@@ -301,6 +301,100 @@ function IEEEORC() {
       }
     });
 
+    // Green arm is not using this
+
+    // LRT
+    this.lrtApp = new Vue({
+      el: '#lrt',
+      data: {
+        teamid: 0,
+        teamtime1: 0,
+        teamtime2: 0,
+        teamavg: 0,
+        mutex: false
+      },
+      methods: {
+        calculatePoints: function() {
+          if (this.teamtime2 > 0) {
+            // Average the two
+            this.teamavg = (this.teamtime2 + this.teamtime1) / 2;
+          } else {
+            // Just use the 1st one
+            this.teamavg = this.teamtime1;
+          }
+        },
+        // This method submits the data to the remote database server
+        submitData: function() {
+          if (this.mutex) return;
+          this.mutex = true;
+
+          // Validate the data
+          if (this.teamtime1 == 0) {
+            // Invalid team ID
+            document.getElementById('snackbar').MaterialSnackbar.showSnackbar({message: 'Primary round time cannot be zero!'});
+            this.mutex = false;
+            return;
+          }
+          this.calculatePoints();
+
+          orc.sendAuthenticatedRequest('POST', 'https://TODO', 'data', (res, err) => {
+            var data;
+            if (err) {
+              data = {message: 'Error recording: ' + (res ? JSON.parse(res).message : err)};
+            } else {
+              data = JSON.parse(res);
+              if (data.message.indexOf('success') >= 0) {
+                Object.keys(this.students).forEach(key => {
+                });
+              }
+            }
+            document.getElementById('snackbar').MaterialSnackbar.showSnackbar(data);
+            this.mutex = false;
+          }, this);
+        }
+      }
+    });
+
+    // Interview
+    this.interviewApp = new Vue({
+      el: '#interview',
+      data: {
+        teamid: 0,
+        teampoints: 0,
+        mutex: false
+      },
+      methods: {
+        // This method submits the data to the remote database server
+        submitData: function() {
+          if (this.mutex) return;
+          this.mutex = true;
+
+          // Validate the data
+          if (this.teampoints > 32) {
+            // Invalid team ID
+            document.getElementById('snackbar').MaterialSnackbar.showSnackbar({message: 'Points score too high for interview!'});
+            this.mutex = false;
+            return;
+          }
+
+          orc.sendAuthenticatedRequest('POST', 'https://TODO', 'data', (res, err) => {
+            var data;
+            if (err) {
+              data = {message: 'Error recording: ' + (res ? JSON.parse(res).message : err)};
+            } else {
+              data = JSON.parse(res);
+              if (data.message.indexOf('success') >= 0) {
+                Object.keys(this.students).forEach(key => {
+                });
+              }
+            }
+            document.getElementById('snackbar').MaterialSnackbar.showSnackbar(data);
+            this.mutex = false;
+          }, this);
+        }
+      }
+    });
+
   }.bind(this));
 }
 

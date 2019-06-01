@@ -414,10 +414,10 @@
           <h2 class="mdl-card__title-text">Green Arm (Arduino)</h2>
         </div>
         <div class="mdl-card__supporting-text mdl-color-text--grey-600">
-
+          <p>Data will be calculated manually.</p>
         </div>
         <div class="mdl-card__actions mdl-card--border">
-          <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" v-on:click="submitData()" :disabled="mutex">
+          <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" disabled>
             Submit Results
           </a>
         </div>
@@ -429,7 +429,41 @@
           <h2 class="mdl-card__title-text">LRT (Arduino)</h2>
         </div>
         <div class="mdl-card__supporting-text mdl-color-text--grey-600">
-
+          <p>If bonus round was not attempted, Bonus round time should be 0.</p>
+          <table class="mdl-data-table mdl-js-data-table result-table">
+            <thead>
+              <tr>
+                <th class="mdl-data-table__cell--non-numeric">Team Number</th>
+                <th class="mdl-data-table__cell--non-numeric">Primary round time (s)</th>
+                <th class="mdl-data-table__cell--non-numeric">Bonus round time (s)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*" id="lrt-teamid" v-model.number="teamid">
+                    <label class="mdl-textfield__label" for="lrt-teamid">Number</label>
+                    <span class="mdl-textfield__error">Input is not a number!</span>
+                  </div>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*(\.[0-9]+)?" id="lrt-teamtime" v-model.number="teamtime1">
+                    <label class="mdl-textfield__label" for="lrt-teamtime">Main Time</label>
+                    <span class="mdl-textfield__error">Input is not a number!</span>
+                  </div>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*(\.[0-9]+)?" id="lrt-teamtime" v-model.number="teamtime2">
+                    <label class="mdl-textfield__label" for="lrt-teamtime">Bonus Time</label>
+                    <span class="mdl-textfield__error">Input is not a number!</span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
         <div class="mdl-card__actions mdl-card--border">
           <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" v-on:click="submitData()" :disabled="mutex">
@@ -444,7 +478,32 @@
           <h2 class="mdl-card__title-text">Interview</h2>
         </div>
         <div class="mdl-card__supporting-text mdl-color-text--grey-600">
-
+          <table class="mdl-data-table mdl-js-data-table result-table">
+            <thead>
+              <tr>
+                <th class="mdl-data-table__cell--non-numeric">Team Number</th>
+                <th class="mdl-data-table__cell--non-numeric">Points</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*" id="interview-teamid" v-model.number="teamid">
+                    <label class="mdl-textfield__label" for="interview-teamid">Number</label>
+                    <span class="mdl-textfield__error">Input is not a number!</span>
+                  </div>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*(\.[0-9]+)?" id="interview-points" v-model.number="teampoints">
+                    <label class="mdl-textfield__label" for="interview-points">Points</label>
+                    <span class="mdl-textfield__error">Input is not a number!</span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
         <div class="mdl-card__actions mdl-card--border">
           <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" v-on:click="submitData()" :disabled="mutex">

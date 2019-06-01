@@ -54,6 +54,9 @@ h3 {
 #davinci .mdl-textfield {
   width: 100px;
 }
+#lrt .mdl-textfield {
+  width: 250px;
+}
 .mdl-checkbox__box-outline, .mdl-checkbox__focus-helper {
   left: inherit;
 }
