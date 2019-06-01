@@ -2,7 +2,7 @@
 'use strict';
 
 // Firebase configuration
-var firebaseConfig = {
+const firebaseConfig = {
   apiKey: 'AIzaSyAE4eRBKFJ7rZ11eU-WWJp5VKA9S5JuJhA',
   authDomain: 'ieee-orc.firebaseapp.com',
   databaseURL: 'https://ieee-orc.firebaseio.com',
@@ -12,23 +12,27 @@ var firebaseConfig = {
   appId: '1:547825791862:web:e47809a421a8153b'
 };
 
+// API config
+const API_BACKEND = 'http://c9.anjurik.ml:3000';
+
 // Initializes the IEEE ORC app.
 function IEEEORC() {
   document.addEventListener('DOMContentLoaded', function() {
     // Shortcuts to DOM Elements.
     this.signInButton = document.getElementById('btn-sign-in');
     this.signOutButton = document.getElementById('btn-sign-out');
+    this.recalculateButton = document.getElementById('btn-recalculate');
     this.styleContainer = document.getElementById('dyn-signin');
     this.userNameContainer = document.getElementById('user-name');
-    this.userIsAdmin = false;
 
     // Initialize the Firebase app.
-    //firebase.initializeApp(firebaseConfig);
+    firebase.initializeApp(firebaseConfig);
 
     // Bind events.
     this.signInButton.addEventListener('click', this.signIn.bind(this));
     this.signOutButton.addEventListener('click', this.signOut.bind(this));
-    //firebase.auth().onAuthStateChanged(this.onAuthStateChanged.bind(this));
+    this.recalculateButton.addEventListener('click', this.recalculateScores.bind(this));
+    firebase.auth().onAuthStateChanged(this.onAuthStateChanged.bind(this));
     this.signedInUser = null;
 
     // Setup Vue apps for each competition
@@ -82,16 +86,12 @@ function IEEEORC() {
           }
           this.calculatePoints();
 
-          orc.sendAuthenticatedRequest('POST', 'https://TODO', 'data', (res, err) => {
+          orc.sendAuthenticatedRequest('POST', API_BACKEND + '/sumo', {one: this.one, two: this.two}, (res, err) => {
             var data;
             if (err) {
               data = {message: 'Error recording: ' + (res ? JSON.parse(res).message : err)};
             } else {
               data = JSON.parse(res);
-              if (data.message.indexOf('success') >= 0) {
-                Object.keys(this.students).forEach(key => {
-                });
-              }
             }
             document.getElementById('snackbar').MaterialSnackbar.showSnackbar(data);
             this.mutex = false;
@@ -187,16 +187,12 @@ function IEEEORC() {
           }
           this.calculatePoints();
 
-          orc.sendAuthenticatedRequest('POST', 'https://TODO', 'data', (res, err) => {
+          orc.sendAuthenticatedRequest('POST', API_BACKEND + '/dragrace', {one: {id: this.one.id, pts: this.onePts}, two: {id: this.two.id, pts: this.twoPts}}, (res, err) => {
             var data;
             if (err) {
               data = {message: 'Error recording: ' + (res ? JSON.parse(res).message : err)};
             } else {
               data = JSON.parse(res);
-              if (data.message.indexOf('success') >= 0) {
-                Object.keys(this.students).forEach(key => {
-                });
-              }
             }
             document.getElementById('snackbar').MaterialSnackbar.showSnackbar(data);
             this.mutex = false;
@@ -268,16 +264,12 @@ function IEEEORC() {
           }
           this.calculatePoints();
 
-          orc.sendAuthenticatedRequest('POST', 'https://TODO', 'data', (res, err) => {
+          orc.sendAuthenticatedRequest('POST', API_BACKEND + '/davinci', {one: {id: this.one.id, pts: this.onePts}, two: {id: this.two.id, pts: this.twoPts}}, (res, err) => {
             var data;
             if (err) {
               data = {message: 'Error recording: ' + (res ? JSON.parse(res).message : err)};
             } else {
               data = JSON.parse(res);
-              if (data.message.indexOf('success') >= 0) {
-                Object.keys(this.students).forEach(key => {
-                });
-              }
             }
             document.getElementById('snackbar').MaterialSnackbar.showSnackbar(data);
             this.mutex = false;
@@ -337,16 +329,12 @@ function IEEEORC() {
           }
           this.calculatePoints();
 
-          orc.sendAuthenticatedRequest('POST', 'https://TODO', 'data', (res, err) => {
+          orc.sendAuthenticatedRequest('POST', API_BACKEND + '/lrt', {team: {id: this.teamid, time: this.teamavg}}, (res, err) => {
             var data;
             if (err) {
               data = {message: 'Error recording: ' + (res ? JSON.parse(res).message : err)};
             } else {
               data = JSON.parse(res);
-              if (data.message.indexOf('success') >= 0) {
-                Object.keys(this.students).forEach(key => {
-                });
-              }
             }
             document.getElementById('snackbar').MaterialSnackbar.showSnackbar(data);
             this.mutex = false;
@@ -377,16 +365,12 @@ function IEEEORC() {
             return;
           }
 
-          orc.sendAuthenticatedRequest('POST', 'https://TODO', 'data', (res, err) => {
+          orc.sendAuthenticatedRequest('POST', API_BACKEND + '/interview', {team: {id: this.teamid, pts: this.teampoints}}, (res, err) => {
             var data;
             if (err) {
               data = {message: 'Error recording: ' + (res ? JSON.parse(res).message : err)};
             } else {
               data = JSON.parse(res);
-              if (data.message.indexOf('success') >= 0) {
-                Object.keys(this.students).forEach(key => {
-                });
-              }
             }
             document.getElementById('snackbar').MaterialSnackbar.showSnackbar(data);
             this.mutex = false;
@@ -411,12 +395,27 @@ IEEEORC.prototype.onAuthStateChanged = function(user) {
 
 // Initiates the sign-in flow using GoogleAuthProvider sign in in a popup.
 IEEEORC.prototype.signIn = function() {
-  //firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider());
+  firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider());
 };
 
 // Signs-out of Firebase.
 IEEEORC.prototype.signOut = function() {
-  //firebase.auth().signOut();
+  firebase.auth().signOut();
+};
+
+// Tells the database to calculate the final results
+IEEEORC.prototype.recalculateScores = function() {
+  this.recalculateButton.disabled = true;
+  this.sendAuthenticatedRequest('GET', API_BACKEND + '/calculate',  (res, err) => {
+    var data;
+    if (err) {
+      data = {message: 'Error recording: ' + (res ? JSON.parse(res).message : err)};
+    } else {
+      data = JSON.parse(res);
+    }
+    this.recalculateButton.disabled = false;
+    document.getElementById('snackbar').MaterialSnackbar.showSnackbar(data);
+  });
 };
 
 // Does an authenticated request to a Firebase Functions endpoint using an Authorization header.
@@ -426,6 +425,7 @@ IEEEORC.prototype.sendAuthenticatedRequest = function(method, url, body, callbac
   } else if (method == 'GET') {
     // The 3rd argument is the callback, not the body
     callback = body;
+    body = null;
   } else {
     // Unsupported
     if (callback) callback(null, 'Unsupported HTTP method!');
@@ -433,7 +433,7 @@ IEEEORC.prototype.sendAuthenticatedRequest = function(method, url, body, callbac
   }
 
   // Authenticate the user before sending anything
-  /*firebase.auth().currentUser.getIdToken().then(function(token) {
+  firebase.auth().currentUser.getIdToken().then(function(token) {
     var req = new XMLHttpRequest();
     req.onload = function() {
       if (callback) callback(req.responseText);
@@ -443,8 +443,14 @@ IEEEORC.prototype.sendAuthenticatedRequest = function(method, url, body, callbac
     }.bind(this);
     req.open(method, url, true);
     req.setRequestHeader('Authorization', 'Bearer ' + token);
-    req.send();
-  }.bind(this));*/
+    if (body) {
+      // POST/PUT request has a JSON body
+      req.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+      req.send(JSON.stringify(body));
+    } else {
+      req.send();
+    }
+  }.bind(this));
 };
 
 // Load the demo.
