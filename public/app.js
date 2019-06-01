@@ -17,68 +17,48 @@ var DB = new Database(DB_PATH, DB_SCHEMA);
  * Feel free to get rid of them and make direct calls to the db.
  */
 
-// Sumo Challenge test functions
+// Database API, for now
+// DB.clearSumoEntries();
+// DB.addSumoEntry(84, 'win');
+// DB.getSumoEntries();
+// DB.computeSumoResults();
+// DB.getSumoResults();
+// DB.clearSumoResults();
+
+// DB.clearDragRaceEntries();
+// DB.addDragRaceEntry(84, 'win');
+// DB.getDragRaceEntries();
+// DB.computeDragRaceResults();
+// DB.getDragRaceResults();
+// DB.clearDragRaceResults();
+
+// DB.clearDaVinciEntries();
+// DB.addDaVinciEntry(84, 9);
+// DB.getDaVinciEntries();
+// DB.computeDaVinciResults();
+// DB.getDaVinciResults();
+// DB.clearDaVinciEntries();
+
+// DB.clearLRTEntries();
+// DB.addLRTEntry(84, 9);
+// DB.getLRTEntries();
+// DB.computeLRTResults();
+// DB.getLRTResults();
+// DB.clearLRTResults();
+
+// DB.addInterviewEntry(89, 15);
+// DB.clearInterviewEntries();
+// DB.getInterviewEntries();
+
+// Challenge test functions
 // (Run only one at a time for best results)
-// addSumoEntries();
-// clearSumoEntries();
+// addChallengeEntries();
+// clearChallengeEntries();
+// getChallengeEntries();
 
 // Interview test functions
 // (run only one at a time for best results)
-// addInterviewEntries();
+//  addInterviewEntries();
 // getInterviewEntries();
 // clearInterviewEntries();
-
-// Sumo Results test functions
-// (run one at a time for best results)
-// computeSumoResults();
-// getSumoResults();
-// clearSumoResults();
-
-function clearSumoEntries() {
-  DB.clearSumoEntries();
-}
-
-function addSumoEntries() {
-  DB.addSumoEntry(84, 'win');
-  DB.addSumoEntry(84, 'tie');
-  DB.addSumoEntry(84, 'loss');
-  DB.addSumoEntry(89, 'win');
-  DB.addSumoEntry(89, 'win');
-  DB.addSumoEntry(89, 'tie')
-  DB.addSumoEntry(82, 'win')
-  DB.addSumoEntry(78, 'loss');
-  DB.addSumoEntry(78, 'loss');
-}
-
-function getSumoEntries() {
-  DB.getSumoEntries();
-}
-
-function addInterviewEntries() {
-  DB.addInterviewEntry(89, 15);
-  DB.addInterviewEntry(84, 25);
-  DB.addInterviewEntry(82, 20);
-  DB.addInterviewEntry(78, 18);
-  DB.addInterviewEntry(89, 30); 
-}
-
-function clearInterviewEntries() {
-  DB.clearInterviewEntries();
-}
-
-function getInterviewEntries() {
-  DB.getInterviewEntries();
-}
-
-function computeSumoResults() {
-  DB.computeSumoResults();
-}
-
-function getSumoResults() {
-  DB.getSumoResults();
-}
-
-function clearSumoResults() {
-  DB.clearSumoResults();
-}
 

@@ -21,7 +21,7 @@ Open a terminal or git bash in the directory in which you wish to install the pr
 4. ```npm install```
 Open the ORC-Data-Entry-2019 folder in your favourite code editor and you should be ready to go.
 
-[temporary]: run ```node app.js``` in the ```public``` Sto run dummy tests and check that th eapp works.
+[temporary]: run ```node app.js``` in the ```public``` directory to run dummy tests and check that the app works.
 
 ## Deployment
 
