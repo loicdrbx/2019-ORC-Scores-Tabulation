@@ -199,20 +199,8 @@ function IEEEORC() {
               // Clear the table
               this.one.id = 0;
               this.one.time = 0;
-              this.one.stop = false;
-              this.one.ltrack = false;
-              this.one.llane = false;
-              this.one.fstart = false;
-              this.one.mstart = false;
-              this.one.interference = false;
               this.two.id = 0;
               this.two.time = 0;
-              this.two.stop = false;
-              this.two.ltrack = false;
-              this.two.llane = false;
-              this.two.fstart = false;
-              this.two.mstart = false;
-              this.two.interference = false;
             }
             document.getElementById('snackbar').MaterialSnackbar.showSnackbar(data);
             this.mutex = false;
@@ -256,13 +244,7 @@ function IEEEORC() {
           if (this.mutex) return;
           this.mutex = true;
 
-          // Validate the data
-          if (this.one.id == this.two.id) {
-            // Invalid team ID
-            document.getElementById('snackbar').MaterialSnackbar.showSnackbar({message: 'Team ID\'s cannot be the same!'});
-            this.mutex = false;
-            return;
-          }
+          // Calculate points
           this.calculatePoints();
 
           orc.sendAuthenticatedRequest('POST', API_BACKEND + '/davinci', {teamid: this.teamid, pts: this.totals}, (res, err) => {
@@ -271,6 +253,10 @@ function IEEEORC() {
               data = {message: 'Error recording: ' + (res ? JSON.parse(res).message : err)};
             } else {
               data = JSON.parse(res);
+              // Clear table
+              for (var i = 0; i < this.totals.length; i++) {
+                this.raw[i].clt = this.raw[i].co = this.raw[i].vir = this.raw[i].qp = this.raw[i].dd = 0;
+              }
             }
             document.getElementById('snackbar').MaterialSnackbar.showSnackbar(data);
             this.mutex = false;
@@ -279,13 +265,7 @@ function IEEEORC() {
       },
       watch: {
         // Watch whenenver the checkboxes change and recalculate the points
-        one: {
-          handler: function(v, ov) {
-            this.calculatePoints();
-          },
-          deep: true
-        },
-        two: {
+        raw: {
           handler: function(v, ov) {
             this.calculatePoints();
           },

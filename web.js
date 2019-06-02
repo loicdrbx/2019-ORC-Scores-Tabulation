@@ -71,20 +71,21 @@ app.post('/sumo', (req, res) => {
   // 0 points = loss, 1 point = tie, 2 points = win
   const translations = ['loss', 'tie', 'win'];
   // Add the database entry for the 1st team
-  DB.addSumoEntry(req.body.one.id, translations[req.body.one.points], function(success, msg) {
+  DB.addSumoEntry(req.body.one.id, translations[req.body.one.points], (success, msg) => {
     if (!success) {
-      res.status(500).send('{"message":"' + msg + '!"}');
+      res.status(500).send(JSON.stringify({message: msg}));
+      return;
     }
     // Add the database entry for the 2nd team
-    DB.addSumoEntry(req.body.two.id, translations[req.body.two.points], function(success2, msg2) {
+    DB.addSumoEntry(req.body.two.id, translations[req.body.two.points], (success2, msg2) => {
       if (!success2) {
-        res.status(500).send('{"message":"' + msg2 + '!"}');
+        res.status(500).send(JSON.stringify({message: msg2}));
+        return;
       }
       // Reply back all ok
       res.status(200).send('{"message":"Results successfully recorded!"}');
     });
   });
-  
 });
 
 // Drag race
@@ -103,52 +104,122 @@ app.post('/dragrace', (req, res) => {
     oneResult = 'tie';
     twoResult = 'tie';
   }
+
   // Add the database entry for the 1st team
-  DB.addDragRaceEntry(req.body.one.id, oneResult);
-  // Add the database entry for the 2nd team
-  DB.addDragRaceEntry(req.body.two.id, twoResult);
-  // Reply back all ok
-  res.status(200).send('{"message":"Results successfully recorded!"}');
+  DB.addDragRaceEntry(req.body.one.id, oneResult, (success, msg) => {
+    if (!success) {
+      res.status(500).send(JSON.stringify({message: msg}));
+      return;
+    }
+    // Add the database entry for the 2nd team
+    DB.addDragRaceEntry(req.body.two.id, twoResult, (success2, msg2) => {
+      if (!success2) {
+        res.status(500).send(JSON.stringify({message: msg2}));
+        return;
+      }
+      // Reply back all ok
+      res.status(200).send('{"message":"Results successfully recorded!"}');
+    });
+  });
 });
 
 // Da vinci
 app.post('/davinci', (req, res) => {
-  // Add the database entry for the 1st team
-  DB.addDaVinciEntry(req.body.one.id, req.body.one.pts);
-  // Add the database entry for the 2nd team
-  DB.addDaVinciEntry(req.body.two.id, req.body.two.pts);
-  // Reply back all ok
-  res.status(200).send('{"message":"Results successfully recorded!"}');
+  // Add the database entry for the 1st judge
+  DB.addDaVinciEntry(req.body.teamid, req.body.pts[0], (success, msg) => {
+    if (!success) {
+      res.status(500).send(JSON.stringify({message: msg}));
+      return;
+    }
+    // Add the database entry for the 2nd judge
+    DB.addDaVinciEntry(req.body.teamid, req.body.pts[1], (success2, msg2) => {
+      if (!success2) {
+        res.status(500).send(JSON.stringify({message: msg2}));
+        return;
+      }
+      // Add the database entry for the 3rd judge
+      DB.addDaVinciEntry(req.body.teamid, req.body.pts[2], (success3, msg3) => {
+        if (!success3) {
+          res.status(500).send(JSON.stringify({message: msg3}));
+          return;
+        }
+        // Add the database entry for the 3rd judge
+        DB.addDaVinciEntry(req.body.teamid, req.body.pts[3], (success4, msg4) => {
+          if (!success4) {
+            res.status(500).send(JSON.stringify({message: msg4}));
+            return;
+          }
+          // Reply back all ok
+          res.status(200).send('{"message":"Results successfully recorded!"}');
+        });
+      });
+    });
+  });
 });
 
 // LRT
 app.post('/lrt', (req, res) => {
   // Add the database entry for the team
-  DB.addLRTEntry(req.body.team.id, req.body.team.time);
-  // Reply back all ok
-  res.status(200).send('{"message":"Results successfully recorded!"}');
+  DB.addLRTEntry(req.body.team.id, req.body.team.time, (success, msg) => {
+    if (!success) {
+      res.status(500).send(JSON.stringify({message: msg}));
+      return;
+    }
+    // Reply back all ok
+    res.status(200).send('{"message":"Results successfully recorded!"}');
+  });
 });
 
 // Interview
 app.post('/interview', (req, res) => {
   // Add the database entry for the team
-  DB.addInterviewEntry(req.body.team.id, req.body.team.pts);
-  // Reply back all ok
-  res.status(200).send('{"message":"Results successfully recorded!"}');
+  DB.addInterviewEntry(req.body.team.id, req.body.team.pts, (success, msg) => {
+    if (!success) {
+      res.status(500).send(JSON.stringify({message: msg}));
+      return;
+    }
+    // Reply back all ok
+    res.status(200).send('{"message":"Results successfully recorded!"}');
+  });
 });
 
 // Calculate all
 app.get('/calculate', (req, res) => {
   // Sumo
-  DB.computeSumoResults();
-  // Drag race
-  DB.computeDragRaceResults();
-  // Da vinci
-  DB.computeDaVinciResults();
-  // LRT
-  DB.computeLRTResults();
-  // Reply back all ok
-  res.status(200).send('{"message":"Results successfully computed!"}');
+  DB.computeSumoResults((success, msg) => {
+    if (!success) {
+      res.status(500).send(JSON.stringify({message: msg}));
+      return;
+    }
+    // Drag race
+    DB.computeDragRaceResults((success2, msg2) => {
+      if (!success2) {
+        res.status(500).send(JSON.stringify({message: msg2}));
+        return;
+      }
+      // Da vinci
+      DB.computeDaVinciResults((success3, msg3) => {
+        if (!success3) {
+          res.status(500).send(JSON.stringify({message: msg3}));
+          return;
+        }
+        // LRT
+        DB.computeLRTResults((success4, msg4) => {
+          if (!success4) {
+            res.status(500).send(JSON.stringify({message: msg4}));
+            return;
+          }
+          // Reply back all ok
+          res.status(200).send('{"message":"Results successfully computed!"}');
+        });
+      });
+    });
+  });
+});
+
+// Get results for all
+app.get('/results', (req, res) => {
+  res.status(500).send('{"message":"nyi"}');
 });
 
 // Listen

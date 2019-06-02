@@ -298,104 +298,54 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
+              <tr v-for="(rawItm, index) in raw">
                 <td>
-                  1
+                  {{ index + 1 }}
                 </td>
                 <td class="mdl-data-table__cell--non-numeric">
                   <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*" id="davinci-team1id" v-model.number="one.id">
+                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*" id="davinci-team1id" v-model.number="teamid">
                     <label class="mdl-textfield__label" for="davinci-team1id">Number</label>
                     <span class="mdl-textfield__error">Input is not a number!</span>
                   </div>
                 </td>
                 <td class="mdl-data-table__cell--non-numeric">
                   <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*(\.[0-9]+)?" id="davinci-team1clt" v-model.number="one.clt">
+                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*(\.[0-9]+)?" id="davinci-team1clt" v-model.number="rawItm.clt">
                     <label class="mdl-textfield__label" for="davinci-team1clt">Score</label>
                     <span class="mdl-textfield__error">Input is not a number!</span>
                   </div>
                 </td>
                 <td class="mdl-data-table__cell--non-numeric">
                   <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*(\.[0-9]+)?" id="davinci-team1co" v-model.number="one.co">
+                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*(\.[0-9]+)?" id="davinci-team1co" v-model.number="rawItm.co">
                     <label class="mdl-textfield__label" for="davinci-team1co">Score</label>
                     <span class="mdl-textfield__error">Input is not a number!</span>
                   </div>
                 </td>
                 <td class="mdl-data-table__cell--non-numeric">
                   <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*(\.[0-9]+)?" id="davinci-team1vir" v-model.number="one.vir">
+                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*(\.[0-9]+)?" id="davinci-team1vir" v-model.number="rawItm.vir">
                     <label class="mdl-textfield__label" for="davinci-team1vir">Score</label>
                     <span class="mdl-textfield__error">Input is not a number!</span>
                   </div>
                 </td>
                 <td class="mdl-data-table__cell--non-numeric">
                   <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*(\.[0-9]+)?" id="davinci-team1qp" v-model.number="one.qp">
+                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*(\.[0-9]+)?" id="davinci-team1qp" v-model.number="rawItm.qp">
                     <label class="mdl-textfield__label" for="davinci-team1qp">Score</label>
                     <span class="mdl-textfield__error">Input is not a number!</span>
                   </div>
                 </td>
                 <td class="mdl-data-table__cell--non-numeric">
                   <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*(\.[0-9]+)?" id="davinci-team1dd" v-model.number="one.dd">
+                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*(\.[0-9]+)?" id="davinci-team1dd" v-model.number="rawItm.dd">
                     <label class="mdl-textfield__label" for="davinci-team1dd">Score</label>
                     <span class="mdl-textfield__error">Input is not a number!</span>
                   </div>
                 </td>
                 <td class="mdl-data-table__cell--non-numeric">
-                  {{ onePts }}
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  2
-                </td>
-                <td class="mdl-data-table__cell--non-numeric">
-                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*" id="davinci-team2id" v-model.number="two.id">
-                    <label class="mdl-textfield__label" for="davinci-team2id">Number</label>
-                    <span class="mdl-textfield__error">Input is not a number!</span>
-                  </div>
-                </td>
-                <td class="mdl-data-table__cell--non-numeric">
-                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*(\.[0-9]+)?" id="davinci-team2clt" v-model.number="two.clt">
-                    <label class="mdl-textfield__label" for="davinci-team2clt">Score</label>
-                    <span class="mdl-textfield__error">Input is not a number!</span>
-                  </div>
-                </td>
-                <td class="mdl-data-table__cell--non-numeric">
-                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*(\.[0-9]+)?" id="davinci-team2co" v-model.number="two.co">
-                    <label class="mdl-textfield__label" for="davinci-team2co">Score</label>
-                    <span class="mdl-textfield__error">Input is not a number!</span>
-                  </div>
-                </td>
-                <td class="mdl-data-table__cell--non-numeric">
-                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*(\.[0-9]+)?" id="davinci-team2vir" v-model.number="two.vir">
-                    <label class="mdl-textfield__label" for="davinci-team2vir">Score</label>
-                    <span class="mdl-textfield__error">Input is not a number!</span>
-                  </div>
-                </td>
-                <td class="mdl-data-table__cell--non-numeric">
-                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*(\.[0-9]+)?" id="davinci-team2qp" v-model.number="two.qp">
-                    <label class="mdl-textfield__label" for="davinci-team2qp">Score</label>
-                    <span class="mdl-textfield__error">Input is not a number!</span>
-                  </div>
-                </td>
-                <td class="mdl-data-table__cell--non-numeric">
-                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*(\.[0-9]+)?" id="davinci-team2dd" v-model.number.number="two.dd">
-                    <label class="mdl-textfield__label" for="davinci-team2dd">Score</label>
-                    <span class="mdl-textfield__error">Input is not a number!</span>
-                  </div>
-                </td>
-                <td class="mdl-data-table__cell--non-numeric">
-                  {{ twoPts }}
+                  {{ totals[index] }}
                 </td>
               </tr>
             </tbody>
