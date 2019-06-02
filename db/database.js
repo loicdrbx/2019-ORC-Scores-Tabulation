@@ -78,7 +78,7 @@ class Database {
         break;
       default:
         // return console.error("Failed to insert data. Team's result can be either win, tie, or loss.");
-        if (callback) callback("Failed to insert data. Team's result can be either win, tie, or loss.");
+        if (callback) callback(false, "Failed to insert data. Team's result can be either win, tie, or loss.");
     }
   }
 
