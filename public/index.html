@@ -1,25 +1,549 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>ORC Data Entry</title>
-    <link rel="stylesheet" type="text/css" href="css/styles.css">
-  </head>
-  <body>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="IEEE Ottawa Robotics Competition Tabulation">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IEEE ORC</title>
 
-    <h1>Home Page</h1>
-    <!-- 
-      Components this page needs to have:
+  <!-- Material Design Lite -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.blue-orange.min.css">
+  <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
 
-      Navigation to each challenge's data entry forms.
-    -->
+  <link rel="stylesheet" href="css/styles.css">
+  <style id="dyn-signin"></style>
+</head>
+<body>
+<div class="mdl-layout mdl-js-layout">
+  <!-- Header section containing title -->
+  <header class="mdl-layout__header mdl-layout__header--scroll">
+    <div class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
+      <div class="mdl-layout__header-row mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-desktop">
+        <h3>IEEE ORC Tabulation</h3>
+        <!-- Add spacer, to align navigation to the right -->
+        <div class="mdl-layout-spacer"></div>
+        <!-- Navigation -->
+        <nav class="mdl-navigation">
+          <a class="mdl-navigation__link" href="#davinci">Da Vinci</a>
+          <a class="mdl-navigation__link" href="#dragrace">Drag Race</a>
+          <a class="mdl-navigation__link" href="#greenarm">Green Arm</a>
+          <a class="mdl-navigation__link" href="#lrt">LRT</a>
+          <a class="mdl-navigation__link" href="#sumo">Sumo</a>
+          <a class="mdl-navigation__link" href="#interview">Interview</a>
+        </nav>
+      </div>
+    </div>
+  </header>
 
-    <!-- Testing integration with database -->
+  <main class="mdl-layout__content mdl-color--grey-100">
+    <div class="mdl-cell--12-col mdl-cell--12-col-tablet mdl-grid">
+      <!-- Card containing the sign-in UI -->
+      <div class="mdl-card mdl-shadow--2dp mdl-cell cards-signed-out">
+        <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+          <p>
+            This page is for authorized users to record IEEE ORC tabulations.
+          </p>
+          <button id="btn-sign-in" class="mdl-color-text--grey-700 mdl-button--raised mdl-button mdl-js-button mdl-js-ripple-effect"><i class="material-icons">account_circle</i> Sign in with Google</button>
+        </div>
+      </div>
 
-    <button type="button" id="test-btn">Click Me!</button>
+      <!-- Cards containing the signed-in UI -->
+      <div class="mdl-card mdl-shadow--2dp mdl-cell cards-signed-in">
+        <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+          <p>
+            Hello, <span id="user-name" style="font-weight: bold;">Unknown User</span>!
+          </p>
+          <br />
+          <button id="btn-sign-out" class="mdl-color-text--grey-700 mdl-button--raised mdl-button mdl-js-button mdl-js-ripple-effect">Sign out</button>
+        </div>
+      </div>
 
+      <!-- Cards containing the signed-in UI -->
+      <div class="mdl-card mdl-shadow--2dp mdl-cell cards-signed-in" id="sumo">
+        <div class="mdl-card__title mdl-card--expand">
+          <h2 class="mdl-card__title-text">Sumo (Lego)</h2>
+        </div>
+        <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+          <table class="mdl-data-table mdl-js-data-table result-table">
+            <thead>
+              <tr>
+                <th>Team</th>
+                <th class="mdl-data-table__cell--non-numeric">Team Number</th>
+                <th class="mdl-data-table__cell--non-numeric">Score</th>
+                <th class="mdl-data-table__cell--non-numeric">Won?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  1
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*" id="sumo-team1id" v-model.number="one.id">
+                    <label class="mdl-textfield__label" for="sumo-team1id">Number</label>
+                    <span class="mdl-textfield__error">Input is not a number!</span>
+                  </div>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*(\.[0-9]+)?" id="sumo-team1score" v-model.number="one.score">
+                    <label class="mdl-textfield__label" for="sumo-team1score">Score</label>
+                    <span class="mdl-textfield__error">Input is not a number!</span>
+                  </div>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <span v-if="one.score > two.score">Win</span>
+                  <span v-if="one.score == two.score">Tie</span>
+                  <span v-if="one.score < two.score">Loss</span>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  2
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*" id="sumo-team2id" v-model.number="two.id">
+                    <label class="mdl-textfield__label" for="sumo-team2id">Number</label>
+                    <span class="mdl-textfield__error">Input is not a number!</span>
+                  </div>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*(\.[0-9]+)?" id="sumo-team2score" v-model.number="two.score">
+                    <label class="mdl-textfield__label" for="sumo-team2score">Score</label>
+                    <span class="mdl-textfield__error">Input is not a number!</span>
+                  </div>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <span v-if="two.score > one.score">Win</span>
+                  <span v-if="two.score == one.score">Tie</span>
+                  <span v-if="two.score < one.score">Loss</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="mdl-card__actions mdl-card--border">
+          <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" v-on:click="submitData()" :disabled="mutex">
+            Submit Results
+          </a>
+        </div>
+      </div>
 
-    <script type="text/javascript" src="/bundle.js"></script>
-  </body>
+      <!-- Cards containing the signed-in UI -->
+      <div class="mdl-card mdl-shadow--2dp mdl-cell cards-signed-in" id="dragrace">
+        <div class="mdl-card__title mdl-card--expand">
+          <h2 class="mdl-card__title-text">Drag Race (Lego)</h2>
+        </div>
+        <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+          <p>Use Time = 0 for incomplete.</p>
+          <table class="mdl-data-table mdl-js-data-table result-table">
+            <thead>
+              <tr>
+                <th>Team</th>
+                <th class="mdl-data-table__cell--non-numeric">Number</th>
+                <th class="mdl-data-table__cell--non-numeric">Time (s)</th>
+                <th class="mdl-data-table__cell--non-numeric">Stop?</th>
+                <th class="mdl-data-table__cell--non-numeric">Left track?</th>
+                <th class="mdl-data-table__cell--non-numeric">Left lane?</th>
+                <th class="mdl-data-table__cell--non-numeric">False s.?</th>
+                <th class="mdl-data-table__cell--non-numeric">Manual s.?</th>
+                <th class="mdl-data-table__cell--non-numeric">Interf.?</th>
+                <th class="mdl-data-table__cell--non-numeric">Points</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  1
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*" id="dragrace-team1id" v-model.number="one.id">
+                    <label class="mdl-textfield__label" for="dragrace-team1id">Number</label>
+                    <span class="mdl-textfield__error">Input is not a number!</span>
+                  </div>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*(\.[0-9]+)?" id="dragrace-team1time" v-model.number="one.time">
+                    <label class="mdl-textfield__label" for="dragrace-team1time">Time</label>
+                    <span class="mdl-textfield__error">Input is not a number!</span>
+                  </div>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <label class="mdl-checkbox mdl-js-checkbox" for="dragrace-stop1">
+                    <input type="checkbox" id="dragrace-stop1" class="mdl-checkbox__input" v-model="one.stop">
+                  </label>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <label class="mdl-checkbox mdl-js-checkbox" for="dragrace-ltrack1">
+                    <input type="checkbox" id="dragrace-ltrack1" class="mdl-checkbox__input" v-model="one.ltrack">
+                  </label>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <label class="mdl-checkbox mdl-js-checkbox" for="dragrace-llane1">
+                    <input type="checkbox" id="dragrace-llane1" class="mdl-checkbox__input" v-model="one.llane">
+                  </label>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <label class="mdl-checkbox mdl-js-checkbox" for="dragrace-fstart1">
+                    <input type="checkbox" id="dragrace-fstart1" class="mdl-checkbox__input" v-model="one.fstart">
+                  </label>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <label class="mdl-checkbox mdl-js-checkbox" for="dragrace-mstart1">
+                    <input type="checkbox" id="dragrace-mstart1" class="mdl-checkbox__input" v-model="one.mstart">
+                  </label>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <label class="mdl-checkbox mdl-js-checkbox" for="dragrace-interference1">
+                    <input type="checkbox" id="dragrace-interference1" class="mdl-checkbox__input" v-model="one.interference">
+                  </label>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  {{ onePts }}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  2
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*" id="dragrace-team2id" v-model.number="two.id">
+                    <label class="mdl-textfield__label" for="dragrace-team2id">Number</label>
+                    <span class="mdl-textfield__error">Input is not a number!</span>
+                  </div>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*(\.[0-9]+)?" id="dragrace-team2time" v-model.number="two.time">
+                    <label class="mdl-textfield__label" for="dragrace-team2time">Time</label>
+                    <span class="mdl-textfield__error">Input is not a number!</span>
+                  </div>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <label class="mdl-checkbox mdl-js-checkbox" for="dragrace-stop2">
+                    <input type="checkbox" id="dragrace-stop2" class="mdl-checkbox__input" v-model="two.stop">
+                  </label>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <label class="mdl-checkbox mdl-js-checkbox" for="dragrace-ltrack2">
+                    <input type="checkbox" id="dragrace-ltrack2" class="mdl-checkbox__input" v-model="two.ltrack">
+                  </label>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <label class="mdl-checkbox mdl-js-checkbox" for="dragrace-llane2">
+                    <input type="checkbox" id="dragrace-llane2" class="mdl-checkbox__input" v-model="two.llane">
+                  </label>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <label class="mdl-checkbox mdl-js-checkbox" for="dragrace-fstart2">
+                    <input type="checkbox" id="dragrace-fstart2" class="mdl-checkbox__input" v-model="two.fstart">
+                  </label>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <label class="mdl-checkbox mdl-js-checkbox" for="dragrace-mstart2">
+                    <input type="checkbox" id="dragrace-mstart2" class="mdl-checkbox__input" v-model="two.mstart">
+                  </label>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <label class="mdl-checkbox mdl-js-checkbox" for="dragrace-interference2">
+                    <input type="checkbox" id="dragrace-interference2" class="mdl-checkbox__input" v-model="two.interference">
+                  </label>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  {{ twoPts }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="mdl-card__actions mdl-card--border">
+          <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" v-on:click="submitData()" :disabled="mutex">
+            Submit Results
+          </a>
+        </div>
+      </div>
+
+      <!-- Cards containing the signed-in UI -->
+      <div class="mdl-card mdl-shadow--2dp mdl-cell cards-signed-in" id="davinci">
+        <div class="mdl-card__title mdl-card--expand">
+          <h2 class="mdl-card__title-text">Da Vinci (Lego)</h2>
+        </div>
+        <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+          <p><ul>
+            <li>CLT = Composition, Layout, and Techniques</li>
+            <li>CO = Creativity and Originality</li>
+            <li>VIR = Visual Impact and Relevance to the Year’s Theme</li>
+            <li>QP = Quality and Presentation</li>
+            <li>DD = Degree of Difficulty</li>
+          </ul></p>
+          <table class="mdl-data-table mdl-js-data-table result-table">
+            <thead>
+              <tr>
+                <th>Team</th>
+                <th class="mdl-data-table__cell--non-numeric">Number</th>
+                <th class="mdl-data-table__cell--non-numeric">CLT score</th>
+                <th class="mdl-data-table__cell--non-numeric">CO score</th>
+                <th class="mdl-data-table__cell--non-numeric">VIR score</th>
+                <th class="mdl-data-table__cell--non-numeric">QP score</th>
+                <th class="mdl-data-table__cell--non-numeric">DD score</th>
+                <th class="mdl-data-table__cell--non-numeric">Points</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  1
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*" id="davinci-team1id" v-model.number="one.id">
+                    <label class="mdl-textfield__label" for="davinci-team1id">Number</label>
+                    <span class="mdl-textfield__error">Input is not a number!</span>
+                  </div>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*(\.[0-9]+)?" id="davinci-team1clt" v-model.number="one.clt">
+                    <label class="mdl-textfield__label" for="davinci-team1clt">Score</label>
+                    <span class="mdl-textfield__error">Input is not a number!</span>
+                  </div>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*(\.[0-9]+)?" id="davinci-team1co" v-model.number="one.co">
+                    <label class="mdl-textfield__label" for="davinci-team1co">Score</label>
+                    <span class="mdl-textfield__error">Input is not a number!</span>
+                  </div>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*(\.[0-9]+)?" id="davinci-team1vir" v-model.number="one.vir">
+                    <label class="mdl-textfield__label" for="davinci-team1vir">Score</label>
+                    <span class="mdl-textfield__error">Input is not a number!</span>
+                  </div>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*(\.[0-9]+)?" id="davinci-team1qp" v-model.number="one.qp">
+                    <label class="mdl-textfield__label" for="davinci-team1qp">Score</label>
+                    <span class="mdl-textfield__error">Input is not a number!</span>
+                  </div>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*(\.[0-9]+)?" id="davinci-team1dd" v-model.number="one.dd">
+                    <label class="mdl-textfield__label" for="davinci-team1dd">Score</label>
+                    <span class="mdl-textfield__error">Input is not a number!</span>
+                  </div>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  {{ onePts }}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  2
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*" id="davinci-team2id" v-model.number="two.id">
+                    <label class="mdl-textfield__label" for="davinci-team2id">Number</label>
+                    <span class="mdl-textfield__error">Input is not a number!</span>
+                  </div>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*(\.[0-9]+)?" id="davinci-team2clt" v-model.number="two.clt">
+                    <label class="mdl-textfield__label" for="davinci-team2clt">Score</label>
+                    <span class="mdl-textfield__error">Input is not a number!</span>
+                  </div>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*(\.[0-9]+)?" id="davinci-team2co" v-model.number="two.co">
+                    <label class="mdl-textfield__label" for="davinci-team2co">Score</label>
+                    <span class="mdl-textfield__error">Input is not a number!</span>
+                  </div>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*(\.[0-9]+)?" id="davinci-team2vir" v-model.number="two.vir">
+                    <label class="mdl-textfield__label" for="davinci-team2vir">Score</label>
+                    <span class="mdl-textfield__error">Input is not a number!</span>
+                  </div>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*(\.[0-9]+)?" id="davinci-team2qp" v-model.number="two.qp">
+                    <label class="mdl-textfield__label" for="davinci-team2qp">Score</label>
+                    <span class="mdl-textfield__error">Input is not a number!</span>
+                  </div>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*(\.[0-9]+)?" id="davinci-team2dd" v-model.number.number="two.dd">
+                    <label class="mdl-textfield__label" for="davinci-team2dd">Score</label>
+                    <span class="mdl-textfield__error">Input is not a number!</span>
+                  </div>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  {{ twoPts }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="mdl-card__actions mdl-card--border">
+          <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" v-on:click="submitData()" :disabled="mutex">
+            Submit Results
+          </a>
+        </div>
+      </div>
+
+      <!-- Cards containing the signed-in UI -->
+      <div class="mdl-card mdl-shadow--2dp mdl-cell cards-signed-in" id="greenarm">
+        <div class="mdl-card__title mdl-card--expand">
+          <h2 class="mdl-card__title-text">Green Arm (Arduino)</h2>
+        </div>
+        <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+          <p>Data will be calculated manually.</p>
+        </div>
+        <div class="mdl-card__actions mdl-card--border">
+          <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" disabled>
+            Submit Results
+          </a>
+        </div>
+      </div>
+
+      <!-- Cards containing the signed-in UI -->
+      <div class="mdl-card mdl-shadow--2dp mdl-cell cards-signed-in" id="lrt">
+        <div class="mdl-card__title mdl-card--expand">
+          <h2 class="mdl-card__title-text">LRT (Arduino)</h2>
+        </div>
+        <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+          <p>If bonus round was not attempted, Bonus round time should be 0.</p>
+          <table class="mdl-data-table mdl-js-data-table result-table">
+            <thead>
+              <tr>
+                <th class="mdl-data-table__cell--non-numeric">Team Number</th>
+                <th class="mdl-data-table__cell--non-numeric">Primary round time (s)</th>
+                <th class="mdl-data-table__cell--non-numeric">Bonus round time (s)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*" id="lrt-teamid" v-model.number="teamid">
+                    <label class="mdl-textfield__label" for="lrt-teamid">Number</label>
+                    <span class="mdl-textfield__error">Input is not a number!</span>
+                  </div>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*(\.[0-9]+)?" id="lrt-teamtime" v-model.number="teamtime1">
+                    <label class="mdl-textfield__label" for="lrt-teamtime">Main Time</label>
+                    <span class="mdl-textfield__error">Input is not a number!</span>
+                  </div>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*(\.[0-9]+)?" id="lrt-teamtime" v-model.number="teamtime2">
+                    <label class="mdl-textfield__label" for="lrt-teamtime">Bonus Time</label>
+                    <span class="mdl-textfield__error">Input is not a number!</span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="mdl-card__actions mdl-card--border">
+          <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" v-on:click="submitData()" :disabled="mutex">
+            Submit Results
+          </a>
+        </div>
+      </div>
+
+      <!-- Cards containing the signed-in UI -->
+      <div class="mdl-card mdl-shadow--2dp mdl-cell cards-signed-in" id="interview">
+        <div class="mdl-card__title mdl-card--expand">
+          <h2 class="mdl-card__title-text">Interview</h2>
+        </div>
+        <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+          <table class="mdl-data-table mdl-js-data-table result-table">
+            <thead>
+              <tr>
+                <th class="mdl-data-table__cell--non-numeric">Team Number</th>
+                <th class="mdl-data-table__cell--non-numeric">Points</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*" id="interview-teamid" v-model.number="teamid">
+                    <label class="mdl-textfield__label" for="interview-teamid">Number</label>
+                    <span class="mdl-textfield__error">Input is not a number!</span>
+                  </div>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*(\.[0-9]+)?" id="interview-points" v-model.number="teampoints">
+                    <label class="mdl-textfield__label" for="interview-points">Points</label>
+                    <span class="mdl-textfield__error">Input is not a number!</span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="mdl-card__actions mdl-card--border">
+          <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" v-on:click="submitData()" :disabled="mutex">
+            Submit Results
+          </a>
+        </div>
+      </div>
+
+      <!-- Cards containing the signed-in UI -->
+      <div class="mdl-card mdl-shadow--2dp mdl-cell cards-signed-in" id="finalresults">
+        <div class="mdl-card__title mdl-card--expand">
+          <h2 class="mdl-card__title-text">Final Results</h2>
+        </div>
+        <div class="mdl-card__supporting-text mdl-color-text--grey-600">
+          <p>Please check console on server for the final results.</p>
+        </div>
+        <div class="mdl-card__actions mdl-card--border">
+          <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" id="btn-recalculate">
+            Recalculate
+          </a>
+        </div>
+      </div>
+
+    </div>
+    <div id="snackbar" class="mdl-js-snackbar mdl-snackbar">
+      <div class="mdl-snackbar__text"></div>
+      <button class="mdl-snackbar__action" type="button"></button>
+    </div>
+  </main>
+</div>
+
+<!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-app.js"></script>
+
+<!-- Add Firebase products that you want to use -->
+<script src="https://www.gstatic.com/firebasejs/6.1.0/firebase-auth.js"></script>
+
+<!-- Vue -->
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<!-- prod <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
+<script src="js/scripts.js"></script>
+</body>
 </html>
