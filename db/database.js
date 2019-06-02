@@ -48,29 +48,36 @@ class Database {
       case 'win':
         this.db.run(winSQL, function(err) {
           if (err) {
-            return console.error(err.message);
+            // console.error(err.message);
+            return `Unable to insert data. Error: ${err.message}`;
           }
-          console.log('Team ' + teamNum + 's sumo result has been inserted.' );
+          // console.log('Team ' + teamNum + 's sumo result has been inserted.');
+          return 'Team ' + teamNum + 's sumo result has been inserted.';
         });
         break;
       case 'tie':
         this.db.run(tieSQL, function(err) {
           if (err) {
-            return console.error(err.message);
+            // console.error(err.message);
+            return `Unable to insert data. Error: ${err.message}`;
           }
-          console.log('Team ' + teamNum + 's sumo result has been inserted.' );
+          // console.log('Team ' + teamNum + 's sumo result has been inserted.');
+          return 'Team ' + teamNum + 's sumo result has been inserted.';
         });
         break;
       case 'loss':
         this.db.run(lossSQL, function(err) {
           if (err) {
-            return console.error(err.message);
+            // console.error(err.message);
+            return `Unable to insert data. Error: ${err.message}`;
           }
-          console.log('Team ' + teamNum + 's sumo result has been inserted.' );
+          // console.log('Team ' + teamNum + 's sumo result has been inserted.');
+          return 'Team ' + teamNum + 's sumo result has been inserted.';
         });
         break;
       default:
-        return console.error("Invalid result string. Failed to insert data. Try again, dummy.");
+        // return console.error("Failed to insert data. Team's result can be either win, tie, or loss.");
+        return "Failed to insert data. Team's result can be either win, tie, or loss.";
     }
   }
 
@@ -83,14 +90,16 @@ class Database {
     // Return the results of the query one row at a time
     this.db.all(SQL, function(err, rows) {
       if (err) {
-        return console.error(error.message);
+        // console.error(err.message);
+        return `Unable to retrieve data. Error: ${err.message}`;
       }
+      return rows;
       // Pretty print the results
-      console.log('Sumo Challenge Results');
-      console.log('Team # | Matches | Wins | Ties | Losses | Points | Score (out of 70)');
-      rows.forEach(function(row) {
-        console.log(`${row.teamNum} | ${row.matches} | ${row.wins} | ${row.ties} | ${row.losses} | ${row.points} | ${row.score}`);
-      });
+      // console.log('Sumo Challenge Results');
+      // console.log('Team # | Matches | Wins | Ties | Losses | Points | Score (out of 70)');
+      // rows.forEach(function(row) {
+      //   console.log(`${row.teamNum} | ${row.matches} | ${row.wins} | ${row.ties} | ${row.losses} | ${row.points} | ${row.score}`);
+      // });
     });
   }
 
@@ -100,7 +109,8 @@ class Database {
   clearSumoEntries() {
     this.db.run(`DELETE FROM sumo_challenge;`, function(err) {
       if (err) {
-        return console.error(err.message);
+        // console.error(err.message);
+        return `Unable to delete data. Error: ${err.message}`;
       }
       console.log('sumo_challenge table has been cleared.');
     });

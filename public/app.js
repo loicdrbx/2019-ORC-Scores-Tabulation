@@ -6,22 +6,11 @@ const DB_SCHEMA = Schema.DB_SCHEMA;
 
 var DB = new Database(DB_PATH, DB_SCHEMA);
 
-/**
- * WARNING - BEWARE
- * Most the database functions run asyschronously. This means that
- * your code will not be executed line by line, but rather race to complete.
- * (i.e the tenth line might finish executing before the first line.)
- * Either learn how to use javascript promises or run one command at a time.
- * 
- * ALSO - The test functions are just wrappers of the actual DB functions.
- * Feel free to get rid of them and make direct calls to the db.
- */
-
 // Database API, for now
 // DB.clearSumoEntries();
-// DB.addSumoEntry(84, 'win');
+// DB.addSumoEntry(85, 'tie');
 // DB.getSumoEntries();
-// DB.computeSumoResults();
+ DB.computeSumoResults();
 // DB.getSumoResults();
 // DB.clearSumoResults();
 
@@ -35,7 +24,7 @@ var DB = new Database(DB_PATH, DB_SCHEMA);
 // DB.clearDaVinciEntries();
 // DB.addDaVinciEntry(84, 9);
 // DB.getDaVinciEntries();
-// DB.computeDaVinciResults();
+//  DB.computeDaVinciResults();
 // DB.getDaVinciResults();
 // DB.clearDaVinciEntries();
 
@@ -62,3 +51,36 @@ var DB = new Database(DB_PATH, DB_SCHEMA);
 // getInterviewEntries();
 // clearInterviewEntries();
 
+function addChallengeEntries() {
+
+  DB.addDaVinciEntry(55, 10);
+  DB.addDaVinciEntry(55, 5);
+  DB.addDaVinciEntry(55, 10);
+  DB.addDaVinciEntry(55, 5);
+
+  DB.addDaVinciEntry(84, 9);
+  DB.addDaVinciEntry(84, 9);
+  DB.addDaVinciEntry(84, 9);
+  DB.addDaVinciEntry(84, 9);
+}
+
+function addInterviewEntries() {
+  DB.addInterviewEntry(55, 30);
+  DB.addInterviewEntry(84, 15);
+}
+
+function computeDaVinciResults() {
+  DB.computeDaVinciResults();
+}
+
+function getChallengeEntries() {
+  DB.getDaVinciEntries();
+}
+
+function getInterviewEntries() {
+  DB.getInterviewEntries();
+}
+
+function getDaVinciResults() {
+  DB.getDaVinciResults();
+}
