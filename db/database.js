@@ -49,35 +49,35 @@ class Database {
       case 'win':
         this.db.run(winSQL, function(err) {
           if (err) {
-            // console.error(err.message);
+            console.error(err.message);
             if (callback) callback(false, `Unable to insert data. Error: ${err.message}`);
           }
-          // console.log('Team ' + teamNum + 's sumo result has been inserted.');
+          console.log('Team ' + teamNum + 's sumo result has been inserted.');
           if (callback) callback(true);
         });
         break;
       case 'tie':
         this.db.run(tieSQL, function(err) {
           if (err) {
-            // console.error(err.message);
+            console.error(err.message);
             if (callback) callback(false, `Unable to insert data. Error: ${err.message}`);
           }
-          // console.log('Team ' + teamNum + 's sumo result has been inserted.');
+          console.log('Team ' + teamNum + 's sumo result has been inserted.');
           if (callback) callback(true);
         });
         break;
       case 'loss':
         this.db.run(lossSQL, function(err) {
           if (err) {
-            // console.error(err.message);
+            console.error(err.message);
             if (callback) callback(false, `Unable to insert data. Error: ${err.message}`);
           }
-          // console.log('Team ' + teamNum + 's sumo result has been inserted.');
+          console.log('Team ' + teamNum + 's sumo result has been inserted.');
           if (callback) callback(true);
         });
         break;
       default:
-        // return console.error("Failed to insert data. Team's result can be either win, tie, or loss.");
+        console.error("Failed to insert data. Team's result can be either win, tie, or loss.");
         if (callback) callback(false, "Failed to insert data. Team's result can be either win, tie, or loss.");
     }
   }
@@ -92,7 +92,7 @@ class Database {
     // Return the results of the query one row at a time
     this.db.all(SQL, function(err, rows) {
       if (err) {
-        // console.error(err.message);
+        console.error(err.message);
         if (callback) callback(`Unable to retrieve data. Error: ${err.message}`);
       }
       if (callback) callback(rows);
@@ -112,10 +112,10 @@ class Database {
   clearSumoEntries(callback) {
     this.db.run(`DELETE FROM sumo_challenge;`, function(err) {
       if (err) {
-        // console.error(err.message);
+        console.error(err.message);
         if (callback) callback(false, `Unable to delete data. Error: ${err.message}`);
       }
-      // console.log('sumo_challenge table has been cleared.');
+      console.log('sumo_challenge table has been cleared.');
       if (callback) callback(true);
     });
   }
@@ -152,7 +152,7 @@ class Database {
     // Retun the results of the query one row at a time
     this.db.all(SQL, function(err, rows) {
       if (err) {
-        // console.error(err.message)
+        console.error(err.message)
         if (callback) callback(`Unable to retrieve data. Error + ${err.message}`);
       }
       if (callback) callback(rows);
@@ -172,9 +172,10 @@ class Database {
   clearSumoResults(callback) {
     this.db.run(`DELETE FROM sumo_results;`, function(err) {
       if (err) {
-        // console.error(err.message);
+        console.error(err.message);
         if (callback) callback(false, `Unable to delete data. Error: ${err.message}`);
       }
+      console.log('sumo_results table has been cleared.');
       if (callback) callback(true);
     });
   }
@@ -204,35 +205,35 @@ class Database {
       case 'win':
         this.db.run(winSQL, function(err) {
           if (err) {
-            // console.error(err.message);
+            console.error(err.message);
             if (callback) callback(false, `Unable to insert data. Error: ${err.message}`);
           }
-          // console.log('Team ' + teamNum + 's Drag Race result has been inserted.');
+          console.log('Team ' + teamNum + 's Drag Race result has been inserted.');
           if (callback) callback(true);
         });
         break;
       case 'tie':
         this.db.run(tieSQL, function(err) {
           if (err) {
-            // console.error(err.message);
+            console.error(err.message);
             if (callback) callback(false, `Unable to insert data. Error: ${err.message}`);
           }
-          // console.log('Team ' + teamNum + 's Drag Race result has been inserted.');
+          console.log('Team ' + teamNum + 's Drag Race result has been inserted.');
           if (callback) callback(true);
         });
         break;
       case 'loss':
         this.db.run(lossSQL, function(err) {
           if (err) {
-            // console.error(err.message);
+            console.error(err.message);
             if (callback) callback(false, `Unable to insert data. Error: ${err.message}`);
           }
-          // console.log('Team ' + teamNum + 's Drag Race result has been inserted.');
+          console.log('Team ' + teamNum + 's Drag Race result has been inserted.');
           if (callback) callback(true);
         });
         break;
       default:
-        // return console.error("Failed to insert data. Team's result can be either win, tie, or loss.");
+        console.error("Failed to insert data. Team's result can be either win, tie, or loss.");
         if (callback) callback(false, "Failed to insert data. Team's result can be either win, tie, or loss.");    }
   }
 
@@ -246,7 +247,7 @@ class Database {
     // Return the results of the query one row at a time
     this.db.all(SQL, function(err, rows) {
       if (err) {
-        // console.error(err.message);
+        console.error(err.message);
         if (callback) callback(`Unable to retrieve data. Error: ${err.message}`);
       }
       if (callback) callback (rows);
@@ -266,10 +267,10 @@ class Database {
   clearDragRaceEntries(callback) {
     this.db.run(`DELETE FROM drag_challenge;`, function(err) {
       if (err) {
-        // console.error(err.message);
+        console.error(err.message);
         if (callback) callback(false, `Unable to delete data. Error: ${err.message}`);
       }
-      // console.log('drag_challenge table has been cleared.');
+      console.log('drag_challenge table has been cleared.');
       if (callback) callback(true);
     });
   }
@@ -287,10 +288,10 @@ class Database {
     // Run the SQL
     this.db.run(SQL, function(err) {
       if (err) {
-        // return console.error(err.message);
+        console.error(err.message);
         if (callback) callback(false, `Unable to compute results. Error: ${err.message}`);       
       }
-      // console.log('Drag Race final results have been computed!');
+      console.log('Drag Race final results have been computed!');
       if (callback) callback(true);
     });
   }
@@ -305,7 +306,7 @@ class Database {
     // Retun the results of the query one row at a time
     this.db.all(SQL, function(err, rows) {
       if (err) {
-        // console.error(err.message)
+        console.error(err.message);
         if (callback) callback(`Unable to retrieve data. Error + ${err.message}`);
       }
       if (callback) callback(rows);
@@ -325,10 +326,10 @@ class Database {
   clearDragRaceResults(callback) {
     this.db.run(`DELETE FROM drag_results;`, function(err) {
       if (err) {
-        // console.error(err.message);
+        console.error(err.message);
         if (callback) callback(false, `Unable to delete data. Error: ${err.message}`);
       }
-      // console.log('drag_results table has been cleared.');
+      console.log('drag_results table has been cleared.');
       if (callback) callback(true);
     });
   }
@@ -348,10 +349,10 @@ class Database {
     // Run the SQL
     this.db.run(SQL, function(err) {
       if (err) {
-        // console.error(err.message);
+        console.error(err.message);
         if (callback) callback(false, `Unable to insert data. Error: ${err.message}`);
       }
-      // console.log('Team ' + teamNum + 's Da Vinci result has been inserted.');
+      console.log('Team ' + teamNum + 's Da Vinci result has been inserted.');
       if (callback) callback(true);
     });
   }
@@ -366,7 +367,7 @@ class Database {
     // Return the results of the query one row at a time
     this.db.all(SQL, function(err, rows) {
       if (err) {
-        // console.error(err.message);
+        console.error(err.message);
         if (callback) callback(`Unable to retrieve data. Error: ${err.message}`);
       }
       if (callback) callback (rows);
@@ -386,10 +387,10 @@ class Database {
   clearDaVinciEntries(callback) {
     this.db.run(`DELETE FROM daVinci_challenge;`, function(err) {
       if (err) {
-        // console.error(err.message);
+        console.error(err.message);
         if (callback) callback(false, `Unable to delete data. Error: ${err.message}`);
       }
-      // console.log('daVinci_challenge table has been cleared.');
+      console.log('daVinci_challenge table has been cleared.');
       if (callback) callback(true);
     });
   }
@@ -408,10 +409,10 @@ class Database {
     // Run the SQL
     this.db.run(SQL, function(err) {
       if (err) {
-        // return console.error(err.message);
+        console.error(err.message);
         if (callback) callback(false, `Unable to compute results. Error: ${err.message}`);       
       }
-      // console.log('Da Vinci final results have been computed!');
+      console.log('Da Vinci final results have been computed!');
       if (callback) callback(true);
     });
   }
@@ -426,7 +427,7 @@ class Database {
     // Retun the results of the query one row at a time
     this.db.all(SQL, function(err, rows) {
       if (err) {
-        // console.error(err.message)
+        console.error(err.message);
         if (callback) callback(`Unable to retrieve data. Error + ${err.message}`);
       }
       if (callback) callback(rows);
@@ -446,10 +447,10 @@ class Database {
   clearDaVinciResults(callback) {
     this.db.run(`DELETE FROM daVinci_results;`, function(err) {
       if (err) {
-        // console.error(err.message);
+        console.error(err.message);
         if (callback) callback(false, `Unable to delete data. Error: ${err.message}`);
       }
-      // console.log('daVinci_results table has been cleared.');
+      console.log('daVinci_results table has been cleared.');
       if (callback) callback(true);
     });
   }
@@ -466,10 +467,10 @@ class Database {
     // Run the SQL
     this.db.run(SQL, function(err) {
       if (err) {
-        // console.error(err.message);
+        console.error(err.message);
         if (callback) callback(false, `Unable to insert data. Error: ${err.message}`);
       }
-      // console.log('Team ' + teamNum + 's Interview result has been inserted.');
+      console.log('Team ' + teamNum + 's Interview result has been inserted.');
       if (callback) callback(true);
     });
   }
@@ -484,7 +485,7 @@ class Database {
     // Return the results of the query one row at a time
     this.db.all(SQL, function(err, rows) {
       if (err) {
-        // console.error(err.message);
+        console.error(err.message);
         if (callback) callback(`Unable to retrieve data. Error: ${err.message}`);
       }
       if (callback) callback (rows);
@@ -504,10 +505,10 @@ class Database {
   clearInterviewEntries() {
     this.db.run(`DELETE FROM interview_scores;`, function(err) {
       if (err) {
-        // console.error(err.message);
+        console.error(err.message);
         if (callback) callback(false, `Unable to delete data. Error: ${err.message}`);
       }
-      // console.log('interview_results table has been cleared.');
+      // console.log('interview_scores table has been cleared.');
       if (callback) callback(true);
     });
   }
@@ -527,10 +528,10 @@ class Database {
     // Run the SQL
     this.db.run(SQL, function(err) {
       if (err) {
-        // console.error(err.message);
+        console.error(err.message);
         if (callback) callback(false, `Unable to insert data. Error: ${err.message}`);
       }
-      // console.log('Team ' + teamNum + 's LRT result has been inserted.');
+      console.log('Team ' + teamNum + 's LRT result has been inserted.');
       if (callback) callback(true);
     });
   }
@@ -545,7 +546,7 @@ class Database {
     // Return the results of the query one row at a time
     this.db.all(SQL, function(err, rows) {
       if (err) {
-        // console.error(err.message);
+        console.error(err.message);
         if (callback) callback(`Unable to retrieve data. Error: ${err.message}`);
       }
       if (callback) callback (rows);
@@ -565,10 +566,10 @@ class Database {
   clearLRTEntries(callback) {
     this.db.run(`DELETE FROM lrt_challenge;`, function(err) {
       if (err) {
-        // console.error(err.message);
+        console.error(err.message);
         if (callback) callback(false, `Unable to delete data. Error: ${err.message}`);
       }
-      // console.log('lrt_challenge table has been cleared.');
+      console.log('lrt_challenge table has been cleared.');
       if (callback) callback(true);
     });
   }
@@ -587,10 +588,10 @@ class Database {
     // Run the SQL
     this.db.run(SQL, function(err) {
       if (err) {
-        // return console.error(err.message);
+        console.error(err.message);
         if (callback) callback(false, `Unable to compute results. Error: ${err.message}`);       
       }
-      // console.log('LRT final results have been computed!');
+      console.log('LRT final results have been computed!');
       if (callback) callback(true)
     });
   }
@@ -605,7 +606,7 @@ class Database {
     // Retun the results of the query one row at a time
     this.db.all(SQL, function(err, rows) {
       if (err) {
-        // console.error(err.message)
+        console.error(err.message)
         if (callback) callback(`Unable to retrieve data. Error + ${err.message}`);
       }
       if (callback) callback(rows);
@@ -625,11 +626,47 @@ class Database {
   clearLRTResults() {
     this.db.run(`DELETE FROM lrt_results;`, function(err) {
       if (err) {
-        // console.error(err.message);
+        console.error(err.message);
         if (callback) callback(false, `Unable to delete data. Error: ${err.message}`);
       }
-      // console.log('lrt_results table has been cleared.');
+      console.log('lrt_results table has been cleared.');
       if (callback) callback(true);
+    });
+  }
+
+  /**
+   * Runs an insert or delete SQL command
+   * @param {string} SQL The SQL command to be executed
+   * @param {function} callback The function to call upon success or failure. First argument is success (boolean), second argument is description (string) when an error occurs
+   */
+  runSQLCommand(SQL, callback) {
+    this.db.run(SQL, function(err) {
+      if (err) {
+        console.error(err.message);
+        if (callback) callback(false, `Unable to executed command. Error: ${err.message}`);
+      }
+      console.log('SQL command has been executed.');
+      if (callback) callback(true);
+    });
+  }
+
+  /**
+   * Runs a SELECT SQL query
+   * @param {string} SQL The command to be executed
+   * @param {function} callback The function to call upon success or failure. First argument is success (boolean), second argument is description (string) when an error occurs
+   */
+  runSQLQuery(SQL, callback) {
+    this.db.all(SQL, function(err, rows) {
+      if (err) {
+        console.error(err.message)
+        if (callback) callback(`Unable to retrieve data. Error + ${err.message}`);
+      }
+      if (callback) callback(rows);
+      // Pretty print the results
+      console.log('Query results');
+      rows.forEach(function(row) {
+        console.log(row);
+      });
     });
   }
 
