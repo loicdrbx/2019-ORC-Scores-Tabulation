@@ -189,6 +189,6 @@ CREATE TRIGGER IF NOT EXISTS lrt_results_insertTrigger AFTER INSERT ON lrt_resul
 /** INTERVIEW */
 CREATE TABLE IF NOT EXISTS interview_scores (
   teamNum INT PRIMARY KEY,
-  score INT DEFAULT 0 NOT NULL
+  score REAL DEFAULT 0.0 NOT NULL
 )
 `
