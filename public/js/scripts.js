@@ -92,6 +92,9 @@ function IEEEORC() {
               data = {message: 'Error recording: ' + (res ? JSON.parse(res).message : err)};
             } else {
               data = JSON.parse(res);
+              // Clear the table
+              this.one.id = 0; this.one.score = 0; this.one.points = 0;
+              this.two.id = 0; this.two.score = 0; this.two.points = 0;
             }
             document.getElementById('snackbar').MaterialSnackbar.showSnackbar(data);
             this.mutex = false;
@@ -193,6 +196,23 @@ function IEEEORC() {
               data = {message: 'Error recording: ' + (res ? JSON.parse(res).message : err)};
             } else {
               data = JSON.parse(res);
+              // Clear the table
+              this.one.id = 0;
+              this.one.time = 0;
+              this.one.stop = false;
+              this.one.ltrack = false;
+              this.one.llane = false;
+              this.one.fstart = false;
+              this.one.mstart = false;
+              this.one.interference = false;
+              this.two.id = 0;
+              this.two.time = 0;
+              this.two.stop = false;
+              this.two.ltrack = false;
+              this.two.llane = false;
+              this.two.fstart = false;
+              this.two.mstart = false;
+              this.two.interference = false;
             }
             document.getElementById('snackbar').MaterialSnackbar.showSnackbar(data);
             this.mutex = false;
@@ -220,35 +240,16 @@ function IEEEORC() {
     this.davinciApp = new Vue({
       el: '#davinci',
       data: {
-        one: {
-          id: 0,
-          clt: 0,
-          co: 0,
-          vir: 0,
-          qp: 0,
-          dd: 0,
-        },
-        onePts: 0,
-        two: {
-          id: 0,
-          clt: 0,
-          co: 0,
-          vir: 0,
-          qp: 0,
-          dd: 0,
-        },
-        twoPts: 0,
+        teamid: 0,
+        raw: [{clt: 0, co: 0, vir: 0, qp: 0, dd: 0},{clt: 0, co: 0, vir: 0, qp: 0, dd: 0},{clt: 0, co: 0, vir: 0, qp: 0, dd: 0},{clt: 0, co: 0, vir: 0, qp: 0, dd: 0}],
+        totals: [0,0,0,0],
         mutex: false
       },
       methods: {
         calculatePoints: function() {
-          // Reset points
-          this.onePts = 0;
-          this.twoPts = 0;
-
           // sum up points
-          this.onePts = this.one.clt + this.one.co + this.one.vir + this.one.qp + this.one.dd;
-          this.twoPts = this.two.clt + this.two.co + this.two.vir + this.two.qp + this.two.dd;
+          for (var i = 0; i < this.totals.length; i++)
+            this.totals[i] = this.raw[i].clt + this.raw[i].co + this.raw[i].vir + this.raw[i].qp + this.raw[i].dd;
         },
         // This method submits the data to the remote database server
         submitData: function() {
@@ -264,7 +265,7 @@ function IEEEORC() {
           }
           this.calculatePoints();
 
-          orc.sendAuthenticatedRequest('POST', API_BACKEND + '/davinci', {one: {id: this.one.id, pts: this.onePts}, two: {id: this.two.id, pts: this.twoPts}}, (res, err) => {
+          orc.sendAuthenticatedRequest('POST', API_BACKEND + '/davinci', {teamid: this.teamid, pts: this.totals}, (res, err) => {
             var data;
             if (err) {
               data = {message: 'Error recording: ' + (res ? JSON.parse(res).message : err)};
@@ -335,6 +336,10 @@ function IEEEORC() {
               data = {message: 'Error recording: ' + (res ? JSON.parse(res).message : err)};
             } else {
               data = JSON.parse(res);
+              // Clear table
+              this.teamid = 0;
+              this.teamtime1 = 0;
+              this.teamtime2 = 0;
             }
             document.getElementById('snackbar').MaterialSnackbar.showSnackbar(data);
             this.mutex = false;
@@ -348,6 +353,12 @@ function IEEEORC() {
       el: '#interview',
       data: {
         teamid: 0,
+        one: {
+          teampoints: 0,
+        },
+        two: {
+          teampoints: 0,
+        },
         teampoints: 0,
         mutex: false
       },
@@ -358,12 +369,15 @@ function IEEEORC() {
           this.mutex = true;
 
           // Validate the data
-          if (this.teampoints > 32) {
+          if (this.one.teampoints > 32 || this.two.teampoints > 32) {
             // Invalid team ID
             document.getElementById('snackbar').MaterialSnackbar.showSnackbar({message: 'Points score too high for interview!'});
             this.mutex = false;
             return;
           }
+
+          // average the data
+          this.teampoints = (this.one.teampoints + this.two.teampoints) / 2;
 
           orc.sendAuthenticatedRequest('POST', API_BACKEND + '/interview', {team: {id: this.teamid, pts: this.teampoints}}, (res, err) => {
             var data;
@@ -371,6 +385,11 @@ function IEEEORC() {
               data = {message: 'Error recording: ' + (res ? JSON.parse(res).message : err)};
             } else {
               data = JSON.parse(res);
+              // Clear the table
+              this.teamid = 0;
+              this.one.teampoints = 0;
+              this.two.teampoints = 0;
+              this.teampoints = 0;
             }
             document.getElementById('snackbar').MaterialSnackbar.showSnackbar(data);
             this.mutex = false;

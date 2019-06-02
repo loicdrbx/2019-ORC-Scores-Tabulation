@@ -481,23 +481,42 @@
           <table class="mdl-data-table mdl-js-data-table result-table">
             <thead>
               <tr>
+                <th class="mdl-data-table__cell--non-numeric">Judge</th>
                 <th class="mdl-data-table__cell--non-numeric">Team Number</th>
                 <th class="mdl-data-table__cell--non-numeric">Points</th>
               </tr>
             </thead>
             <tbody>
               <tr>
+                <td class="mdl-data-table__cell--non-numeric">1</td>
                 <td class="mdl-data-table__cell--non-numeric">
                   <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*" id="interview-teamid" v-model.number="teamid">
-                    <label class="mdl-textfield__label" for="interview-teamid">Number</label>
+                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*" id="interview1-teamid" v-model.number="teamid">
+                    <label class="mdl-textfield__label" for="interview1-teamid">Number</label>
                     <span class="mdl-textfield__error">Input is not a number!</span>
                   </div>
                 </td>
                 <td class="mdl-data-table__cell--non-numeric">
                   <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*(\.[0-9]+)?" id="interview-points" v-model.number="teampoints">
-                    <label class="mdl-textfield__label" for="interview-points">Points</label>
+                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*(\.[0-9]+)?" id="interview1-points" v-model.number="one.teampoints">
+                    <label class="mdl-textfield__label" for="interview1-points">Points</label>
+                    <span class="mdl-textfield__error">Input is not a number!</span>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="mdl-data-table__cell--non-numeric">2</td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*" id="interview2-teamid" v-model.number="teamid">
+                    <label class="mdl-textfield__label" for="interview2-teamid">Number</label>
+                    <span class="mdl-textfield__error">Input is not a number!</span>
+                  </div>
+                </td>
+                <td class="mdl-data-table__cell--non-numeric">
+                  <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" pattern="[0-9]*(\.[0-9]+)?" id="interview2-points" v-model.number="two.teampoints">
+                    <label class="mdl-textfield__label" for="interview2-points">Points</label>
                     <span class="mdl-textfield__error">Input is not a number!</span>
                   </div>
                 </td>

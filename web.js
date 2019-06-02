@@ -68,15 +68,23 @@ app.get('/hello', (req, res) => {
 
 // Sumo
 app.post('/sumo', (req, res) => {
-  // res.status(400).send('{"message":"Student already donated!"}');
   // 0 points = loss, 1 point = tie, 2 points = win
   const translations = ['loss', 'tie', 'win'];
   // Add the database entry for the 1st team
-  DB.addSumoEntry(req.body.one.id, translations[req.body.one.points]);
-  // Add the database entry for the 2nd team
-  DB.addSumoEntry(req.body.two.id, translations[req.body.two.points]);
-  // Reply back all ok
-  res.status(200).send('{"message":"Results successfully recorded!"}');
+  DB.addSumoEntry(req.body.one.id, translations[req.body.one.points], function(success, msg) {
+    if (!success) {
+      res.status(500).send('{"message":"' + msg + '!"}');
+    }
+    // Add the database entry for the 2nd team
+    DB.addSumoEntry(req.body.two.id, translations[req.body.two.points], function(success2, msg2) {
+      if (!success2) {
+        res.status(500).send('{"message":"' + msg2 + '!"}');
+      }
+      // Reply back all ok
+      res.status(200).send('{"message":"Results successfully recorded!"}');
+    });
+  });
+  
 });
 
 // Drag race
