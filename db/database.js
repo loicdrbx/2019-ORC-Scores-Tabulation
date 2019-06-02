@@ -84,7 +84,7 @@ class Database {
 
   /**
    * Retrieves all the data in the sumo challenge table
-   * @param {function} callback  The function to call upon success or failure. If error occurs, the first argument will be a string. If not, it will be an array.
+   * @param {function} callback The function to call upon success or failure. If error occurs, the first argument will be a string. If not, it will be an array.
    */
   getSumoEntries(callback) {
     // SQL query to be executed
@@ -107,7 +107,7 @@ class Database {
 
   /**
    * Clears all data in the sumo challenge table
-   * @param {function} callback  The function to call upon success or failure. First argument is success (boolean), second argument is description (string) when an error occurs
+   * @param {function} callback The function to call upon success or failure. First argument is success (boolean), second argument is description (string) when an error occurs
    */
   clearSumoEntries(callback) {
     this.db.run(`DELETE FROM sumo_challenge;`, function(err) {
@@ -115,7 +115,7 @@ class Database {
         // console.error(err.message);
         if (callback) callback(false, `Unable to delete data. Error: ${err.message}`);
       }
-      console.log('sumo_challenge table has been cleared.');
+      // console.log('sumo_challenge table has been cleared.');
       if (callback) callback(true);
     });
   }
@@ -123,8 +123,9 @@ class Database {
   /**
    * Computes final results for the Sumo Challenge (interview + challenge).
    * Should only be run when all interviews have been completed.
+   * @param {function} callback  The function to call upon success or failure. First argument is success (boolean), second argument is description (string) when an error occurs
    */
-  computeSumoResults() {
+  computeSumoResults(callback) {
     // SQL to be executed
     const SQL = `INSERT OR REPLACE INTO sumo_results (teamNum, challenge, interview)
                   SELECT sumo_challenge.teamNum, sumo_challenge.score, interview_scores.score
@@ -133,39 +134,48 @@ class Database {
     // Run the SQL
     this.db.run(SQL, function(err) {
       if (err) {
-        return console.error(err.message);
+        // return console.error(err.message);
+        if (callback) callback(false, `Unable to compute results. Error: ${err.message}`);       
       }
-      console.log('Sumo final results have been computed!');
+      // console.log('Sumo final results have been computed!');
+      if (callback) callback(true);
     });
   }
 
   /**
    * Retrieves all the data in the sumo_results table
+   * @param {function} callback The function to call upon success or failure. If error occurs, the first argument will be a string. If not, it will be an array.
    */
-  getSumoResults() {
+  getSumoResults(callback) {
     // SQL query to be executed
     const SQL = `SELECT * FROM sumo_results ORDER BY totalScore DESC;`;
     // Retun the results of the query one row at a time
     this.db.all(SQL, function(err, rows) {
       if (err) {
-        return console.error(err.message);
+        // console.error(err.message)
+        if (callback) callback(`Unable to retrieve data. Error + ${err.message}`);
       }
+      if (callback) callback(rows);
       // Pretty print the results
-      console.log('Sumo Final Results');
-      console.log('Team # | Challenge | Interview | Total Score');
-      rows.forEach(function(row) {
-        console.log(`${row.teamNum} | ${row.challenge} | ${row.interview} | ${row.totalScore}`);
-      });
+      // console.log('Sumo Final Results');
+      // console.log('Team # | Challenge | Interview | Total Score');
+      // rows.forEach(function(row) {
+      //   console.log(`${row.teamNum} | ${row.challenge} | ${row.interview} | ${row.totalScore}`);
+      // });
     });
   }
 
-  /** Clears all data in the sumo results table */
-  clearSumoResults() {
+  /**
+   * Clears all data in the sumo results table
+   * @param {function} callback The function to call upon success or failure. First argument is success (boolean), second argument is description (string) when an error occurs
+   */
+  clearSumoResults(callback) {
     this.db.run(`DELETE FROM sumo_results;`, function(err) {
       if (err) {
-        return console.error(err.message);
+        // console.error(err.message);
+        if (callback) callback(false, `Unable to delete data. Error: ${err.message}`);
       }
-      console.log('sumo_results table has been cleared.');
+      if (callback) callback(true);
     });
   }
 
@@ -173,8 +183,9 @@ class Database {
    * Adds an entry to the drag race challenge table
    * @param {number} teamNum The team's number
    * @param {string} result  The team's result. Either win, tie or loss.
+   * @param {function} callback  The function to call upon success or failure. First argument is success (boolean), second argument is description (string) when an error occurs 
    */
-  addDragRaceEntry(teamNum, result) {
+  addDragRaceEntry(teamNum, result, callback) {
     // SQL statements to insert or update (upsert) results into database
     const winSQL = `INSERT INTO drag_challenge (teamNum, wins, ties, losses)
                       VALUES (${teamNum}, 1, 0, 0)
@@ -193,57 +204,81 @@ class Database {
       case 'win':
         this.db.run(winSQL, function(err) {
           if (err) {
-            return console.error(err.message);
+            // console.error(err.message);
+            if (callback) callback(false, `Unable to insert data. Error: ${err.message}`);
           }
-          console.log('Team ' + teamNum + 's drag race result has been inserted.');
+          // console.log('Team ' + teamNum + 's Drag Race result has been inserted.');
+          if (callback) callback(true);
         });
         break;
       case 'tie':
         this.db.run(tieSQL, function(err) {
           if (err) {
-            return console.error(err.message);
+            // console.error(err.message);
+            if (callback) callback(false, `Unable to insert data. Error: ${err.message}`);
           }
-          console.log('Team ' + teamNum + 's drag race result has been inserted.');
+          // console.log('Team ' + teamNum + 's Drag Race result has been inserted.');
+          if (callback) callback(true);
         });
         break;
       case 'loss':
         this.db.run(lossSQL, function(err) {
           if (err) {
-            return console.error(err.message);
+            // console.error(err.message);
+            if (callback) callback(false, `Unable to insert data. Error: ${err.message}`);
           }
-          console.log('Team ' + teamNum + 's drag race result has been inserted.');
+          // console.log('Team ' + teamNum + 's Drag Race result has been inserted.');
+          if (callback) callback(true);
         });
         break;
       default:
-        return console.error("Invalid result string. Failed to insert data. Try again, dummy.");
-    }
+        // return console.error("Failed to insert data. Team's result can be either win, tie, or loss.");
+        if (callback) callback(false, "Failed to insert data. Team's result can be either win, tie, or loss.");    }
   }
 
   /**
    * Retrieves all the data in the drag race challenge table
+   * @param {function} callback The function to call upon success or failure. If error occurs, the first argument will be a string. If not, it will be an array.
    */
-  getDragRaceEntries() {
+  getDragRaceEntries(callback) {
     // SQL query to be executed
     const SQL = `SELECT * FROM drag_challenge ORDER BY score DESC, matches;`;
     // Return the results of the query one row at a time
     this.db.all(SQL, function(err, rows) {
       if (err) {
-        return console.error(error.message);
+        // console.error(err.message);
+        if (callback) callback(`Unable to retrieve data. Error: ${err.message}`);
       }
+      if (callback) callback (rows);
       // Pretty print the results
-      console.log('Drag Race Challenge Results');
-      console.log('Team # | Matches | Wins | Ties | Losses | Points | Score (out of 70)');
-      rows.forEach(function(row) {
-        console.log(`${row.teamNum} | ${row.matches} | ${row.wins} | ${row.ties} | ${row.losses} | ${row.points} | ${row.score}`);
-      });
+      // console.log('Drag Race Challenge Results');
+      // console.log('Team # | Matches | Wins | Ties | Losses | Points | Score (out of 70)');
+      // rows.forEach(function(row) {
+      //   console.log(`${row.teamNum} | ${row.matches} | ${row.wins} | ${row.ties} | ${row.losses} | ${row.points} | ${row.score}`);
+      // });
     });
   }
 
   /**
+   * Clears all data in the drag race challenge table
+   * @param {function} callback The function to call upon success or failure. First argument is success (boolean), second argument is description (string) when an error occurs
+   */
+  clearDragRaceEntries(callback) {
+    this.db.run(`DELETE FROM drag_challenge;`, function(err) {
+      if (err) {
+        // console.error(err.message);
+        if (callback) callback(false, `Unable to delete data. Error: ${err.message}`);
+      }
+      // console.log('drag_challenge table has been cleared.');
+      if (callback) callback(true);
+    });
+  }
+  /**
    * Computes final results for the Drag Race Challenge (interview + challenge).
    * Should only be run when all interviews have been completed.
+   * @param {function} callback The function to call upon success or failure. First argument is success (boolean), second argument is description (string) when an error occurs
    */
-  computeDragRaceResults() {
+  computeDragRaceResults(callback) {
     // SQL to be executed
     const SQL = `INSERT OR REPLACE INTO drag_results (teamNum, challenge, interview)
                   SELECT drag_challenge.teamNum, drag_challenge.score, interview_scores.score
@@ -252,51 +287,49 @@ class Database {
     // Run the SQL
     this.db.run(SQL, function(err) {
       if (err) {
-        return console.error(err.message);
+        // return console.error(err.message);
+        if (callback) callback(false, `Unable to compute results. Error: ${err.message}`);       
       }
-      console.log('Drag Race final results have been computed!');
+      // console.log('Drag Race final results have been computed!');
+      if (callback) callback(true);
     });
   }
   
   /**
    * Retrieves all the data in the drag_results table
+   * @param {function} callback The function to call upon success or failure. If error occurs, the first argument will be a string. If not, it will be an array.
    */
-  getDragRaceResults() {
+  getDragRaceResults(callback) {
     // SQL query to be executed
     const SQL = `SELECT * FROM drag_results ORDER BY totalScore DESC;`;
     // Retun the results of the query one row at a time
     this.db.all(SQL, function(err, rows) {
       if (err) {
-        return console.error(err.message);
+        // console.error(err.message)
+        if (callback) callback(`Unable to retrieve data. Error + ${err.message}`);
       }
+      if (callback) callback(rows);
       // Pretty print the results
-      console.log('Drag Race Final Results');
-      console.log('Team # | Challenge | Interview | Total Score');
-      rows.forEach(function(row) {
-        console.log(`${row.teamNum} | ${row.challenge} | ${row.interview} | ${row.totalScore}`);
-      });
+      // console.log('Drag Race Final Results');
+      // console.log('Team # | Challenge | Interview | Total Score');
+      // rows.forEach(function(row) {
+      //   console.log(`${row.teamNum} | ${row.challenge} | ${row.interview} | ${row.totalScore}`);
+      // });
     });
   }
 
-  /**
-   * Clears all data in the drag race challenge table
+  /** 
+   * Clears all data in the drag race results table
+   * @param {function} callback The function to call upon success or failure. First argument is success (boolean), second argument is description (string) when an error occurs
    */
-  clearDragRaceEntries() {
-    this.db.run(`DELETE FROM drag_challenge;`, function(err) {
-      if (err) {
-        return console.error(err.message);
-      }
-      console.log('drag_challenge table has been cleared.');
-    });
-  }
-
-  /** Clears all data in the drag race results table */
-  clearDragRaceResults() {
+  clearDragRaceResults(callback) {
     this.db.run(`DELETE FROM drag_results;`, function(err) {
       if (err) {
-        return console.error(err.message);
+        // console.error(err.message);
+        if (callback) callback(false, `Unable to delete data. Error: ${err.message}`);
       }
-      console.log('drag_results table has been cleared.');
+      // console.log('drag_results table has been cleared.');
+      if (callback) callback(true);
     });
   }
 
@@ -304,8 +337,9 @@ class Database {
    * Adds an entry to da vinci challenge table
    * @param {number} teamNum The team's number
    * @param {number} points The team's points (out of 10)
+   * @param {function} callback  The function to call upon success or failure. First argument is success (boolean), second argument is description (string) when an error occurs 
    */
-  addDaVinciEntry(teamNum, points) {
+  addDaVinciEntry(teamNum, points, callback) {
     // SQL to be executed
     const SQL = `INSERT INTO daVinci_challenge (teamNum, totalPoints)
                   VALUES (${teamNum}, ${points})
@@ -314,49 +348,58 @@ class Database {
     // Run the SQL
     this.db.run(SQL, function(err) {
       if (err) {
-        return console.error(err.message);
+        // console.error(err.message);
+        if (callback) callback(false, `Unable to insert data. Error: ${err.message}`);
       }
-      console.log('Team ' + teamNum + 's da Vinci score has been inserted.');
+      // console.log('Team ' + teamNum + 's Da Vinci result has been inserted.');
+      if (callback) callback(true);
     });
   }
 
   /**
    * Retrieves all the data in the da vinci race challenge table
+   * @param {function} callback The function to call upon success or failure. If error occurs, the first argument will be a string. If not, it will be an array.
    */
-  getDaVinciEntries() {
+  getDaVinciEntries(callback) {
     // SQL query to be executed
     const SQL = `SELECT * FROM daVinci_challenge ORDER BY score DESC;`;
     // Return the results of the query one row at a time
     this.db.all(SQL, function(err, rows) {
       if (err) {
-        return console.error(error.message);
+        // console.error(err.message);
+        if (callback) callback(`Unable to retrieve data. Error: ${err.message}`);
       }
+      if (callback) callback (rows);
       // Pretty print the results
-      console.log('Da Vinci Challenge Results');
-      console.log('Team # | Total Points | Avg. Points | Score (out of 70)');
-      rows.forEach(function(row) {
-        console.log(`${row.teamNum} | ${row.totalPoints} | ${row.avgPoints} | ${row.score}`);
-      });
+      // console.log('Da Vinci Challenge Results');
+      // console.log('Team # | Total Points | Avg. Points | Score (out of 70)');
+      // rows.forEach(function(row) {
+      //   console.log(`${row.teamNum} | ${row.totalPoints} | ${row.avgPoints} | ${row.score}`);
+      // });
     });
   }
 
   /**
    * Clears all data in the da vinci challenge table
+   * @param {function} callback The function to call upon success or failure. First argument is success (boolean), second argument is description (string) when an error occurs
    */
-  clearDaVinciEntries() {
+  clearDaVinciEntries(callback) {
     this.db.run(`DELETE FROM daVinci_challenge;`, function(err) {
       if (err) {
-        return console.error(err.message);
+        // console.error(err.message);
+        if (callback) callback(false, `Unable to delete data. Error: ${err.message}`);
       }
-      console.log('daVinci_challenge table has been cleared.');
+      // console.log('daVinci_challenge table has been cleared.');
+      if (callback) callback(true);
     });
   }
 
   /**
    * Computes final results for the Da Vinci Challenge (interview + challenge).
    * Should only be run when all interviews have been completed.
+   * @param {function} callback The function to call upon success or failure. First argument is success (boolean), second argument is description (string) when an error occurs
    */
-  computeDaVinciResults() {
+  computeDaVinciResults(callback) {
     // SQL to be executed
     const SQL = `INSERT OR REPLACE INTO daVinci_results (teamNum, challenge, interview)
                   SELECT daVinci_challenge.teamNum, daVinci_challenge.score, interview_scores.score
@@ -365,39 +408,49 @@ class Database {
     // Run the SQL
     this.db.run(SQL, function(err) {
       if (err) {
-        return console.error(err.message);
+        // return console.error(err.message);
+        if (callback) callback(false, `Unable to compute results. Error: ${err.message}`);       
       }
-      console.log('Da Vinci final results have been computed!');
+      // console.log('Da Vinci final results have been computed!');
+      if (callback) callback(true);
     });
   }
   
   /**
    * Retrieves all the data in the daVinci_results table
+   * @param {function} callback The function to call upon success or failure. If error occurs, the first argument will be a string. If not, it will be an array.
    */
-  getDaVinciResults() {
+  getDaVinciResults(callback) {
     // SQL query to be executed
     const SQL = `SELECT * FROM daVinci_results ORDER BY totalScore DESC;`;
     // Retun the results of the query one row at a time
     this.db.all(SQL, function(err, rows) {
       if (err) {
-        return console.error(err.message);
+        // console.error(err.message)
+        if (callback) callback(`Unable to retrieve data. Error + ${err.message}`);
       }
+      if (callback) callback(rows);
       // Pretty print the results
-      console.log('Da Vinci Final Results');
-      console.log('Team # | Challenge | Interview | Total Score');
-      rows.forEach(function(row) {
-        console.log(`${row.teamNum} | ${row.challenge} | ${row.interview} | ${row.totalScore}`);
-      });
+      // console.log('Da Vinci Final Results');
+      // console.log('Team # | Challenge | Interview | Total Score');
+      // rows.forEach(function(row) {
+      //   console.log(`${row.teamNum} | ${row.challenge} | ${row.interview} | ${row.totalScore}`);
+      // });
     });
   }
 
-  /** Clears all data in the drag race results table */
-  clearDaVinciResults() {
+  /** 
+   * Clears all data in the drag race results table
+   * @param {function} callback The function to call upon success or failure. First argument is success (boolean), second argument is description (string) when an error occurs
+   */
+  clearDaVinciResults(callback) {
     this.db.run(`DELETE FROM daVinci_results;`, function(err) {
       if (err) {
-        return console.error(err.message);
+        // console.error(err.message);
+        if (callback) callback(false, `Unable to delete data. Error: ${err.message}`);
       }
-      console.log('daVinci_results table has been cleared.');
+      // console.log('daVinci_results table has been cleared.');
+      if (callback) callback(true);
     });
   }
 
@@ -405,16 +458,57 @@ class Database {
    * Adds an entry to the interview scores table
    * @param {number} teamNum The team's number
    * @param {number} score The team's score (out of 30)
+   * @param {function} callback  The function to call upon success or failure. First argument is success (boolean), second argument is description (string) when an error occurs 
    */
-  addInterviewEntry(teamNum, score) {
+  addInterviewEntry(teamNum, score, callback) {
     // SQL to be executed
     const SQL = `INSERT OR REPLACE INTO interview_scores VALUES (${teamNum},${score});`
     // Run the SQL
     this.db.run(SQL, function(err) {
       if (err) {
-        return console.error(err.message);
+        // console.error(err.message);
+        if (callback) callback(false, `Unable to insert data. Error: ${err.message}`);
       }
-      console.log('Team ' + teamNum + 's interview score has been inserted.');
+      // console.log('Team ' + teamNum + 's Interview result has been inserted.');
+      if (callback) callback(true);
+    });
+  }
+
+  /**
+   * Retrieves all the data in the inverview scores table
+   * @param {function} callback The function to call upon success or failure. If error occurs, the first argument will be a string. If not, it will be an array.
+   */
+  getInterviewEntries(callback) {
+    // SQL query to be executed
+    const SQL = `SELECT * FROM interview_scores ORDER BY teamNum DESC;`;
+    // Return the results of the query one row at a time
+    this.db.all(SQL, function(err, rows) {
+      if (err) {
+        // console.error(err.message);
+        if (callback) callback(`Unable to retrieve data. Error: ${err.message}`);
+      }
+      if (callback) callback (rows);
+      // Pretty print the results
+      // console.log('Interview Scores');
+      // console.log('Team # | Score (out of 30)');
+      // rows.forEach(function(row) {
+      //   console.log(`${row.teamNum} | ${row.score}`);
+      // });
+    });
+  }
+
+  /**
+   * Clears all data from the interview scores table
+   * @param {function} callback The function to call upon success or failure. First argument is success (boolean), second argument is description (string) when an error occurs  
+   */
+  clearInterviewEntries() {
+    this.db.run(`DELETE FROM interview_scores;`, function(err) {
+      if (err) {
+        // console.error(err.message);
+        if (callback) callback(false, `Unable to delete data. Error: ${err.message}`);
+      }
+      // console.log('interview_results table has been cleared.');
+      if (callback) callback(true);
     });
   }
 
@@ -422,8 +516,9 @@ class Database {
    * Adds an entry to the lrt challenge table
    * @param {number} teamNum The team's number
    * @param {number} time The team's time (max 120 seconds)
+   * @param {function} callback  The function to call upon success or failure. First argument is success (boolean), second argument is description (string) when an error occurs 
    */
-  addLRTEntry(teamNum, time) {
+  addLRTEntry(teamNum, time, callback) {
     // SQL to be executed
     const SQL = `INSERT INTO lrt_challenge (teamNum, totalTime)
                   VALUES (${teamNum}, ${time})
@@ -432,69 +527,58 @@ class Database {
     // Run the SQL
     this.db.run(SQL, function(err) {
       if (err) {
-        return console.error(err.message);
+        // console.error(err.message);
+        if (callback) callback(false, `Unable to insert data. Error: ${err.message}`);
       }
-      console.log('Team ' + teamNum + 's LRT score has been inserted.');
+      // console.log('Team ' + teamNum + 's LRT result has been inserted.');
+      if (callback) callback(true);
     });
   }
 
   /**
    * Retrieves all the data in the lrt challenge table
+   * @param {function} callback The function to call upon success or failure. If error occurs, the first argument will be a string. If not, it will be an array.
    */
-  getLRTEntries() {
+  getLRTEntries(callback) {
     // SQL query to be executed
     const SQL = `SELECT * FROM lrt_challenge ORDER BY mazes DESC, score DESC;`;
     // Return the results of the query one row at a time
     this.db.all(SQL, function(err, rows) {
       if (err) {
-        return console.error(error.message);
+        // console.error(err.message);
+        if (callback) callback(`Unable to retrieve data. Error: ${err.message}`);
       }
+      if (callback) callback (rows);
       // Pretty print the results
-      console.log('LRT Challenge Results');
-      console.log('Team # | # Mazes | Total Time | Avg. Time | Score (out of 70)');
-      rows.forEach(function(row) {
-        console.log(`${row.teamNum} | ${row.mazes} | ${row.totalTime} | ${row.avgTime} | ${row.score}`);
-      });
+      // console.log('LRT Challenge Results');
+      // console.log('Team # | # Mazes | Total Time | Avg. Time | Score (out of 70)');
+      // rows.forEach(function(row) {
+      //   console.log(`${row.teamNum} | ${row.mazes} | ${row.totalTime} | ${row.avgTime} | ${row.score}`);
+      // });
     });
   }
 
   /**
    * Clears all data in the lrt challenge table
+   * @param {function} callback The function to call upon success or failure. First argument is success (boolean), second argument is description (string) when an error occurs
    */
-  clearLRTEntries() {
+  clearLRTEntries(callback) {
     this.db.run(`DELETE FROM lrt_challenge;`, function(err) {
       if (err) {
-        return console.error(err.message);
+        // console.error(err.message);
+        if (callback) callback(false, `Unable to delete data. Error: ${err.message}`);
       }
-      console.log('lrt_challenge table has been cleared.');
-    });
-  }
-
-  /**
-   * Retrieves all the data in the inverview scores table
-   */
-  getInterviewEntries() {
-    // SQL query to be executed
-    const SQL = `SELECT * FROM interview_scores ORDER BY teamNum DESC;`;
-    // Return the results of the query one row at a time
-    this.db.all(SQL, function(err, rows) {
-      if (err) {
-        return console.error(error.message);
-      }
-      // Pretty print the results
-      console.log('Interview Scores');
-      console.log('Team # | Score (out of 30)');
-      rows.forEach(function(row) {
-        console.log(`${row.teamNum} | ${row.score}`);
-      });
+      // console.log('lrt_challenge table has been cleared.');
+      if (callback) callback(true);
     });
   }
 
   /**
    * Computes final results for the LRT Challenge (interview + challenge).
    * Should only be run when all interviews have been completed.
+   * @param {function} callback The function to call upon success or failure. First argument is success (boolean), second argument is description (string) when an error occurs
    */
-  computeLRTResults() {
+  computeLRTResults(callback) {
     // SQL to be executed
     const SQL = `INSERT OR REPLACE INTO lrt_results (teamNum, challenge, interview)
                   SELECT lrt_challenge.teamNum, lrt_challenge.score, interview_scores.score
@@ -503,51 +587,49 @@ class Database {
     // Run the SQL
     this.db.run(SQL, function(err) {
       if (err) {
-        return console.error(err.message);
+        // return console.error(err.message);
+        if (callback) callback(false, `Unable to compute results. Error: ${err.message}`);       
       }
-      console.log('LRT final results have been computed!');
+      // console.log('LRT final results have been computed!');
+      if (callback) callback(true)
     });
   }
   
   /**
    * Retrieves all the data in the lrt_results table
+   * @param {function} callback The function to call upon success or failure. If error occurs, the first argument will be a string. If not, it will be an array.
    */
-  getLRTResults() {
+  getLRTResults(callback) {
     // SQL query to be executed
     const SQL = `SELECT * FROM lrt_results ORDER BY totalScore DESC;`;
     // Retun the results of the query one row at a time
     this.db.all(SQL, function(err, rows) {
       if (err) {
-        return console.error(err.message);
+        // console.error(err.message)
+        if (callback) callback(`Unable to retrieve data. Error + ${err.message}`);
       }
+      if (callback) callback(rows);
       // Pretty print the results
-      console.log('LRT Final Results');
-      console.log('Team # | Challenge | Interview | Total Score');
-      rows.forEach(function(row) {
-        console.log(`${row.teamNum} | ${row.challenge} | ${row.interview} | ${row.totalScore}`);
-      });
+      // console.log('LRT Final Results');
+      // console.log('Team # | Challenge | Interview | Total Score');
+      // rows.forEach(function(row) {
+      //   console.log(`${row.teamNum} | ${row.challenge} | ${row.interview} | ${row.totalScore}`);
+      // });
     });
   }
 
-  /** Clears all data in the LRT results table */
+  /** 
+   * Clears all data in the LRT results table
+   * @param {function} callback The function to call upon success or failure. First argument is success (boolean), second argument is description (string) when an error occurs
+   */
   clearLRTResults() {
     this.db.run(`DELETE FROM lrt_results;`, function(err) {
       if (err) {
-        return console.error(err.message);
+        // console.error(err.message);
+        if (callback) callback(false, `Unable to delete data. Error: ${err.message}`);
       }
-      console.log('lrt_results table has been cleared.');
-    });
-  }
-
-  /**
-   * Clears all data from the interview scores table
-   */
-  clearInterviewEntries() {
-    this.db.run(`DELETE FROM interview_scores;`, function(err) {
-      if (err) {
-        return console.error(err.message);
-      }
-      console.log('interview_scores table has been cleared.');
+      // console.log('lrt_results table has been cleared.');
+      if (callback) callback(true);
     });
   }
 
