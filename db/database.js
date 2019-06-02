@@ -28,8 +28,9 @@ class Database {
    * Adds an entry to the sumo challenge table
    * @param {number} teamNum The team's number
    * @param {string} result  The team's result. Either win, tie or loss.
+   * @param {function} callback  The function to call upon success or failure. First argument is success (boolean), second argument is description (string) when an error occurs
    */
-  addSumoEntry(teamNum, result) {
+  addSumoEntry(teamNum, result, callback) {
     // SQL statements to insert or update (upsert) results into database
     const winSQL = `INSERT INTO sumo_challenge (teamNum, wins, ties, losses)
                       VALUES (${teamNum}, 1, 0, 0)
@@ -49,51 +50,52 @@ class Database {
         this.db.run(winSQL, function(err) {
           if (err) {
             // console.error(err.message);
-            return `Unable to insert data. Error: ${err.message}`;
+            if (callback) callback(false, `Unable to insert data. Error: ${err.message}`);
           }
           // console.log('Team ' + teamNum + 's sumo result has been inserted.');
-          return 'Team ' + teamNum + 's sumo result has been inserted.';
+          if (callback) callback(true);
         });
         break;
       case 'tie':
         this.db.run(tieSQL, function(err) {
           if (err) {
             // console.error(err.message);
-            return `Unable to insert data. Error: ${err.message}`;
+            if (callback) callback(false, `Unable to insert data. Error: ${err.message}`);
           }
           // console.log('Team ' + teamNum + 's sumo result has been inserted.');
-          return 'Team ' + teamNum + 's sumo result has been inserted.';
+          if (callback) callback(true);
         });
         break;
       case 'loss':
         this.db.run(lossSQL, function(err) {
           if (err) {
             // console.error(err.message);
-            return `Unable to insert data. Error: ${err.message}`;
+            if (callback) callback(false, `Unable to insert data. Error: ${err.message}`);
           }
           // console.log('Team ' + teamNum + 's sumo result has been inserted.');
-          return 'Team ' + teamNum + 's sumo result has been inserted.';
+          if (callback) callback(true);
         });
         break;
       default:
         // return console.error("Failed to insert data. Team's result can be either win, tie, or loss.");
-        return "Failed to insert data. Team's result can be either win, tie, or loss.";
+        if (callback) callback("Failed to insert data. Team's result can be either win, tie, or loss.");
     }
   }
 
   /**
    * Retrieves all the data in the sumo challenge table
+   * @param {function} callback  The function to call upon success or failure. If error occurs, the first argument will be a string. If not, it will be an array.
    */
-  getSumoEntries() {
+  getSumoEntries(callback) {
     // SQL query to be executed
     const SQL = `SELECT * FROM sumo_challenge ORDER BY score DESC, matches;`;
     // Return the results of the query one row at a time
     this.db.all(SQL, function(err, rows) {
       if (err) {
         // console.error(err.message);
-        return `Unable to retrieve data. Error: ${err.message}`;
+        if (callback) callback(`Unable to retrieve data. Error: ${err.message}`);
       }
-      return rows;
+      if (callback) callback(rows);
       // Pretty print the results
       // console.log('Sumo Challenge Results');
       // console.log('Team # | Matches | Wins | Ties | Losses | Points | Score (out of 70)');
@@ -105,14 +107,16 @@ class Database {
 
   /**
    * Clears all data in the sumo challenge table
+   * @param {function} callback  The function to call upon success or failure. First argument is success (boolean), second argument is description (string) when an error occurs
    */
-  clearSumoEntries() {
+  clearSumoEntries(callback) {
     this.db.run(`DELETE FROM sumo_challenge;`, function(err) {
       if (err) {
         // console.error(err.message);
-        return `Unable to delete data. Error: ${err.message}`;
+        if (callback) callback(false, `Unable to delete data. Error: ${err.message}`);
       }
       console.log('sumo_challenge table has been cleared.');
+      if (callback) callback(true);
     });
   }
 
