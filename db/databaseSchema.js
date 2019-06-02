@@ -7,8 +7,8 @@ CREATE TABLE IF NOT EXISTS sumo_challenge (
   wins INT DEFAULT 0 NOT NULL,
   ties INT DEFAULT 0 NOT NULL,
   losses INT DEFAULT 0 NOT NULL,
-  points INT DEFAULT 0 NOT NULL,
-  score  REAL DEFAULT 0.0 NOT NULL
+  points INT DEFAULT 0 NOT NULL, 
+  score REAL DEFAULT 0.0 NOT NULL
 );
 
 CREATE TRIGGER IF NOT EXISTS sumo_challenge_insertTrigger AFTER INSERT ON sumo_challenge
