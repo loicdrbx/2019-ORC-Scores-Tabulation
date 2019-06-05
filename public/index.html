@@ -140,13 +140,13 @@
           <h2 class="mdl-card__title-text">Drag Race (Lego)</h2>
         </div>
         <div class="mdl-card__supporting-text mdl-color-text--grey-600">
-          <p>Use Time = 0 for incomplete.</p>
+          <p>Use Placing = 0 for incomplete.</p>
           <table class="mdl-data-table mdl-js-data-table result-table">
             <thead>
               <tr>
                 <th>Team</th>
                 <th class="mdl-data-table__cell--non-numeric">Number</th>
-                <th class="mdl-data-table__cell--non-numeric">Time (s)</th>
+                <th class="mdl-data-table__cell--non-numeric">Placing</th>
                 <th class="mdl-data-table__cell--non-numeric">Stop?</th>
                 <th class="mdl-data-table__cell--non-numeric">Left track?</th>
                 <th class="mdl-data-table__cell--non-numeric">Left lane?</th>
@@ -171,7 +171,7 @@
                 <td class="mdl-data-table__cell--non-numeric">
                   <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                     <input class="mdl-textfield__input" type="text" pattern="[0-9]*(\.[0-9]+)?" id="dragrace-team1time" v-model.number="one.time">
-                    <label class="mdl-textfield__label" for="dragrace-team1time">Time</label>
+                    <label class="mdl-textfield__label" for="dragrace-team1time">Placing</label>
                     <span class="mdl-textfield__error">Input is not a number!</span>
                   </div>
                 </td>
@@ -223,7 +223,7 @@
                 <td class="mdl-data-table__cell--non-numeric">
                   <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
                     <input class="mdl-textfield__input" type="text" pattern="[0-9]*(\.[0-9]+)?" id="dragrace-team2time" v-model.number="two.time">
-                    <label class="mdl-textfield__label" for="dragrace-team2time">Time</label>
+                    <label class="mdl-textfield__label" for="dragrace-team2time">Placing</label>
                     <span class="mdl-textfield__error">Input is not a number!</span>
                   </div>
                 </td>
@@ -490,6 +490,12 @@
           <p>Please check console on server for the final results.</p>
         </div>
         <div class="mdl-card__actions mdl-card--border">
+          <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="/entries.html">
+            Sumo and Drag Race Entries
+         </a>
+          <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="/results.html">
+            Final Results
+         </a>
           <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" id="btn-recalculate">
             Recalculate
           </a>

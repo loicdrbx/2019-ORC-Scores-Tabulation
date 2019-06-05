@@ -217,9 +217,76 @@ app.get('/calculate', (req, res) => {
   });
 });
 
-// Get results for all
-app.get('/results', (req, res) => {
-  res.status(500).send('{"message":"nyi"}');
+// Get entries for sumo
+app.get('/entries/sumo', (req, res) => {
+  DB.getSumoEntries((data) => {
+    if ((typeof data) == 'string') {
+      res.status(500).send(JSON.stringify({message: data}));
+      return;
+    }
+
+    res.status(200).send(JSON.stringify(data));
+  });
+});
+
+// Get entries for drag race
+app.get('/entries/dragrace', (req, res) => {
+  DB.getDragRaceEntries((data) => {
+    if ((typeof data) == 'string') {
+      res.status(500).send(JSON.stringify({message: data}));
+      return;
+    }
+
+    res.status(200).send(JSON.stringify(data));
+  });
+});
+
+// Get results for sumo
+app.get('/results/sumo', (req, res) => {
+  DB.getSumoResults((data) => {
+    if ((typeof data) == 'string') {
+      res.status(500).send(JSON.stringify({message: data}));
+      return;
+    }
+
+    res.status(200).send(JSON.stringify(data));
+  });
+});
+
+// Get results for drag race
+app.get('/results/dragrace', (req, res) => {
+  DB.getDragRaceResults((data) => {
+    if ((typeof data) == 'string') {
+      res.status(500).send(JSON.stringify({message: data}));
+      return;
+    }
+
+    res.status(200).send(JSON.stringify(data));
+  });
+});
+
+// Get results for da vinci
+app.get('/results/davinci', (req, res) => {
+  DB.getDaVinciResults((data) => {
+    if ((typeof data) == 'string') {
+      res.status(500).send(JSON.stringify({message: data}));
+      return;
+    }
+
+    res.status(200).send(JSON.stringify(data));
+  });
+});
+
+// Get results for LRT
+app.get('/results/lrt', (req, res) => {
+  DB.getLRTResults((data) => {
+    if ((typeof data) == 'string') {
+      res.status(500).send(JSON.stringify({message: data}));
+      return;
+    }
+
+    res.status(200).send(JSON.stringify(data));
+  });
 });
 
 // Listen

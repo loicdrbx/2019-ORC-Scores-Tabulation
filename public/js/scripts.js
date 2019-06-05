@@ -13,7 +13,7 @@ const firebaseConfig = {
 };
 
 // API config
-const API_BACKEND = 'http://c9.anjurik.ml:3000';
+const API_BACKEND = 'https://orc.ohnx.cf/api';
 
 // Initializes the IEEE ORC app.
 function IEEEORC() {
@@ -138,25 +138,8 @@ function IEEEORC() {
           this.twoPts = 0;
 
           // First the checks for time
-          if (this.one.time > 0) {
-            if (this.one.time <= this.two.time || this.two.time == 0) {
-              // Team 1 beat Team 2 or tie
-              this.onePts += 4;
-            } else {
-              // Second place
-              this.onePts += 3;
-            }
-          }
-
-          if (this.two.time > 0) {
-            if (this.two.time <= this.one.time || this.one.time == 0) {
-              // Team 2 beat Team 1 or tie
-              this.twoPts += 4;
-            } else {
-              // Second place
-              this.twoPts += 3;
-            }
-          }
+          this.onePts += this.one.time;
+          this.twoPts += this.two.time;
 
           // Penalty/bonus calculations for team 1
           if (this.one.stop)   this.onePts += 2;
