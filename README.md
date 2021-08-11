@@ -1,6 +1,6 @@
 # ORC Data Entry 2019
 
-One Paragraph of project description goes here.
+This is the data entry program for the 2019 Ottawa robotics competition. It consists of a sqlite database in the back-end and a vue.js web app in the front-end.
 
 ## Getting Started
 
