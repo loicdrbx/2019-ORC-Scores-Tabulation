@@ -2,6 +2,8 @@
 
 This is the data entry program for the 2019 Ottawa robotics competition. It consists of a sqlite database in the back-end and a vue.js web app in the front-end.
 
+![Screenshot of the data entry web application](https://loicdrbx.github.io/assets/img/portfolio/database-1.png)
+
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
